@@ -24,8 +24,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "white.ace@icloud.com"
     },
-    "description": ""
+    "description": "",
+    "android": {
+      "package": "com.otitan.guilin"
+    }
   }
 }
