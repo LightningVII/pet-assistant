@@ -1,92 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ImageBackground, Text, TextInput, View, Image } from 'react-native';
-import * as Font from 'expo-font';
-import { WingBlank, WhiteSpace, Button, Provider, Toast, InputItem, Icon } from '@ant-design/react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import * as React from 'react';
+import { NavigationNativeContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet
+} from 'react-native'
+import List from './screens/List';
+import Article from './screens/Article';
+import * as theme from './theme';
 
-const image = require('./assets/wallhaven-358106-1.jpg');
-const bg = require('./assets/timg.jpeg')
-const UselessTextInputMultiline = ({ type = null, value, setValue, icon, placeholder = "有标签" }) => {
-  return (
-    <View
-      style={{
-        backgroundColor: "#FFF",
-        borderRadius: 4,
-      }}>
-      <InputItem
-        last
-        clear
-        value={value}
-        onChange={val => setValue(val)}
-        placeholder={placeholder}
-        labelNumber={2}
-        type={type}
-      >
-        <Icon name={icon} size="md" color="#CCC" />
-      </InputItem>
-    </View>
-  );
-}
-
-export default function () {
-  const [isReady, setIsReady] = useState(false);
-  const [password, setPassword] = useState();
-  const [username, setUsername] = useState();
-
-  useEffect(() => {
-    Font.loadAsync({
-      'antoutline': require('@ant-design/icons-react-native/fonts/antoutline.ttf'),
-      'antfill': require('@ant-design/icons-react-native/fonts/antfill.ttf')
-    }).then(() => setIsReady(true))
-  }, [])
-
-  if (!isReady) return null
-  return (
-    <Provider>
-      <ImageBackground
-        style={styles.container} source={bg} >
-
-        <View style={{ alignItems: 'center' }}>
-          <Image style={styles.icon} source={image} />
-        </View>
-        <WhiteSpace size="lg" />
-        <WhiteSpace size="lg" />
-        <WhiteSpace size="lg" />
-        <WhiteSpace size="lg" />
-
-        <LinearGradient
-          colors={['rgba(255,255,255,0.6)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.6)']}
-          start={[0, 0]}
-          end={[1, 1]}
-          style={{
-            padding: 20,
-            margin: 20,
-            borderRadius: 4,
-          }}
-        >
-          <UselessTextInputMultiline value={username} setValue={setUsername} placeholder='请输入用户名' icon="user" />
-          <WhiteSpace size="lg" />
-          <UselessTextInputMultiline type={'password'} value={password} setValue={setPassword} placeholder='请输入密码' icon="lock" />
-          <WhiteSpace size="lg" />
-          <Button type="primary" onPress={() => Toast.info('login success')}>
-            登陆
-        </Button>
-        </LinearGradient>
-
-      </ImageBackground>
-    </Provider>
-  );
-}
+import { FontAwesome, Octicons, MaterialIcons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
-    // alignItems: 'center',
-    justifyContent: 'center',
   },
-  icon: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
+  row: {
+    flexDirection: 'row'
+  },
+  column: {
+    flexDirection: 'column'
+  },
+  headerList: {
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.sizes.padding,
+    paddingTop: theme.sizes.padding * 1.33,
+    paddingBottom: theme.sizes.padding * 0.66,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerArticle: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: theme.sizes.padding,
+    paddingTop: theme.sizes.padding,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: theme.sizes.padding,
+    height: theme.sizes.padding,
+    borderRadius: theme.sizes.padding / 2,
   }
 });
+
+const Stack = createStackNavigator();
+export default function () {
+  return (
+    <NavigationNativeContainer>
+      <Stack.Navigator headerMode={'screen'} initialRouteName="List">
+        <Stack.Screen name="List">
+          {props => <List {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="Article">
+          {props => <Article {...props} />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationNativeContainer >
+  );
+}
+;
