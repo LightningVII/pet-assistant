@@ -8,29 +8,13 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/android/drawable-xxxhdpi/screen.png"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.otitan.guilin"
-    },
     "description": "",
     "android": {
-      "package": "com.otitan.guilin",
-      "splash": {
-        "resizeMode": "native",
-        "backgroundColor": "#000000",
-        "mdpi": "./assets/android/drawable-xxxhdpi/screen.png",
-        "hdpi": "./assets/android/drawable-xxxhdpi/screen.png",
-        "xhdpi": "./assets/android/drawable-xxxhdpi/screen.png",
-        "xxhdpi": "./assets/android/drawable-xxxhdpi/screen.png",
-        "xxxhdpi": "./assets/android/drawable-xxxhdpi/screen.png"
-      }
+      "package": "com.otitan.guilin"
     }
   }
 }

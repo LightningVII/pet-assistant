@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.sizes.radius,
     paddingHorizontal: theme.sizes.padding,
     paddingVertical: theme.sizes.padding / 2,
-    bottom: -theme.sizes.padding,
+    bottom: 0,
     right: theme.sizes.padding,
     left: theme.sizes.padding,
     backgroundColor: theme.colors.white,
@@ -240,7 +240,8 @@ class Articles extends Component {
       headerLeft: props =>
         <View style={{ marginLeft: theme.sizes.padding }}>
           <Text style={{ color: theme.colors.caption }}>Search for place</Text>
-          <Text style={{ fontSize: theme.sizes.font * 2 }}>Destination</Text>
+          {/* .navigate('Notifications') */}
+          <Text onPress={() => this.props.navigation.openDrawer()} style={{ fontSize: theme.sizes.font * 2 }}>Destination</Text>
         </View>,
       headerRight: () => <Image style={[styles.avatar, { marginRight: theme.sizes.padding }]} source={{ uri: 'https://randomuser.me/api/portraits/women/32.jpg' }} />,
       headerStyle: {
@@ -318,7 +319,7 @@ class Articles extends Component {
   renderDestination = item => {
     const { navigation } = this.props;
     return (
-      <View style={{ overflow: 'visible' }} activeOpacity={0.8} onPress={() => navigation.navigate('Article', { article: item })}>
+      <TouchableOpacity style={{ overflow: 'visible', paddingBottom: theme.sizes.padding }} activeOpacity={0.8} onPress={() => navigation.navigate('Article', { article: item })}>
         <ImageBackground
           style={[styles.flex, styles.destination, styles.shadow]}
           imageStyle={{ borderRadius: theme.sizes.radius }}
@@ -359,7 +360,8 @@ class Articles extends Component {
             />
           </View>
         </View>
-      </View>
+
+      </TouchableOpacity>
     )
   }
 
