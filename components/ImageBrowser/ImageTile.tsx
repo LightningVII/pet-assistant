@@ -14,7 +14,7 @@ function ImageTile(props) {
   return (
     <TouchableHighlight
       underlayColor="transparent"
-      onPress={() => selectImage(index)}
+      onPress={() => selectImage(item)}
     >
       <View style={{ position: "relative" }}>
         <View style={{ opacity: selected ? 0.5 : 1 }}>

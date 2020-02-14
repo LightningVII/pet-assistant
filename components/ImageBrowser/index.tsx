@@ -15,18 +15,12 @@ const { width } = Dimensions.get("window");
 const length = width / 4;
 
 function ImageBrowser(props) {
-  const {
-    callback,
-    onChange,
-    max,
-    loadCount,
-    noCameraPermissionComponent
-  } = props;
+  const { callback, onChange, max, loadCount, selected: picSelected } = props;
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [hasCameraRollPermission, setHasCameraRollPermission] = useState();
   const [numColumns, setNumColumns] = useState();
   const [photos, setPhotos] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(picSelected);
   const [isEmpty, setIsEmpty] = useState();
   const [after, setAfter] = useState();
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -49,26 +43,26 @@ function ImageBrowser(props) {
     setNumColumns(getNumColumns(orientationInfo.orientation));
   };
 
-  const prepareCallback = () => {
-    const selectedPhotos = selected.map(i => photos[i]);
+  const findPhoto = item => photos.find(({ id }) => id === item.id);
+  const prepareCallback = newSelected => {
+    const selectedPhotos = newSelected.map(findPhoto);
     const assetsInfo = Promise.all(
       selectedPhotos.map(i => MediaLibrary.getAssetInfoAsync(i))
     );
     callback(assetsInfo);
   };
 
-  const selectImage = index => {
+  const selectImage = item => {
+    const { id } = item;
     let newSelected = Array.from(selected);
-    if (newSelected.indexOf(index) === -1) {
-      newSelected.push(index);
-    } else {
-      const deleteIndex = newSelected.indexOf(index);
-      newSelected.splice(deleteIndex, 1);
-    }
+    const newSelectedIdsIndex = newSelected.map(({ id }) => id).indexOf(id);
+    if (newSelectedIdsIndex === -1) newSelected.push(item);
+    else newSelected.splice(newSelectedIdsIndex, 1);
+
     if (newSelected.length > max) return;
     if (!newSelected) newSelected = [];
     setSelected(newSelected);
-    onChange(newSelected.length, () => prepareCallback());
+    onChange(newSelected.length, () => prepareCallback(newSelected));
   };
 
   const processPhotos = data => {
@@ -109,7 +103,6 @@ function ImageBrowser(props) {
     })();
   }, []);
 
-  if (!hasCameraPermission) return noCameraPermissionComponent || null;
   const ListEmptyComponent = isEmpty ? (
     <Text style={{ marginTop: 40, textAlign: "center" }}>空相册 =(</Text>
   ) : (
@@ -120,15 +113,23 @@ function ImageBrowser(props) {
     offset: length * index,
     index
   });
-  const renderImageTile = ({ item, index }) => (
-    <ImageTile
-      selectedItemNumber={selected.indexOf(index) + 1}
-      item={item}
-      index={index}
-      selected={selected.indexOf(index) !== -1}
-      selectImage={selectImage}
-    />
-  );
+  const renderImageTile = ({ item, index }) => {
+    const itemNumber = selected.map(({ id }) => id).indexOf(item.id);
+    return (
+      <ImageTile
+        selectedItemNumber={itemNumber + 1}
+        item={item}
+        index={index}
+        selected={itemNumber !== -1}
+        selectImage={selectImage}
+      />
+    );
+  };
+
+  if (!hasCameraPermission || !hasCameraRollPermission)
+    return (
+      <Text style={{ marginTop: 40, textAlign: "center" }}>没有访问权限</Text>
+    );
 
   return (
     <View style={{ flex: 1 }}>

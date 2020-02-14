@@ -4,22 +4,36 @@ import { Button, colors } from "react-native-elements";
 import ImageBrowser from "../components/ImageBrowser";
 import { AntDesign } from "@expo/vector-icons";
 
-const styles = StyleSheet.create({
-  emptyStay: {
-    textAlign: "center"
-  }
-});
+const DoneBtn = ({
+  title,
+  disabled,
+  onPress
+}: {
+  title: any;
+  disabled?: any;
+  onPress?: any;
+}) => (
+  <Button
+    buttonStyle={{ paddingTop: 6, paddingBottom: 6, marginRight: 20 }}
+    titleStyle={{ fontSize: 14 }}
+    disabled={disabled}
+    onPress={onPress}
+    title={title}
+  />
+);
 
 function ImagesPicker(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const max = route?.params?.max || 9;
+  const selected = route?.params?.selected || [];
   navigation.setOptions({
     headerTitle: "",
     headerRight: () => (
-      <Button
-        buttonStyle={{ paddingTop: 6, paddingBottom: 6, marginRight: 20 }}
-        titleStyle={{ fontSize: 14 }}
+      <DoneBtn
         disabled
-        title={"完成"}
+        title={`完成${
+          selected.length > 0 ? `(${selected.length}/${max})` : ""
+        }`}
       />
     ),
     headerLeft: props => (
@@ -35,37 +49,31 @@ function ImagesPicker(props) {
   const imagesCallback = callback => {
     callback
       .then(photos => {
-        console.log(photos);
+        route?.params?.callback({ photos });
+        navigation.goBack();
       })
       .catch(e => console.log(e));
   };
 
-  const updateHandler = (count, onSubmit) => {
+  const updateHandler = (count, onSubmit) =>
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          buttonStyle={{ paddingTop: 6, paddingBottom: 6, marginRight: 20 }}
-          titleStyle={{ fontSize: 14 }}
-          disabled={!count}
-          title={`完成${count > 0 ? `(${count + "/9"})` : ""}`}
+        <DoneBtn
+          title={`完成${count > 0 ? `(${count}/${max})` : ""}`}
+          onPress={onSubmit}
         />
       )
     });
-  };
-
-  const noCameraPermissionComponent = (
-    <Text style={styles.emptyStay}>没有访问权限</Text>
-  );
 
   return (
     <SafeAreaView
       style={{ flex: 1, position: "relative", backgroundColor: colors.grey5 }}
     >
       <ImageBrowser
-        max={9}
+        max={max}
+        selected={selected}
         onChange={updateHandler}
         callback={imagesCallback}
-        noCameraPermissionComponent={noCameraPermissionComponent}
       />
     </SafeAreaView>
   );

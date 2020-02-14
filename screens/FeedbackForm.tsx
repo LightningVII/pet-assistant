@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Text,
@@ -16,12 +16,7 @@ import {
   Image,
   colors
 } from "react-native-elements";
-import {
-  FontAwesome,
-  Octicons,
-  MaterialIcons,
-  AntDesign
-} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 
@@ -45,16 +40,30 @@ const styles = {
 };
 
 function FeedbackForm(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const [checked, setChecked] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [cameraImages, setCameraImages] = useState([]);
   const [language, setLanguage] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   navigation.setOptions({
     headerTitle: "请填写反馈报告"
   });
 
-  const imagesPicker = () => navigation.navigate("ImagesPicker");
+  const imagesPicker = () =>
+    navigation.navigate("ImagesPicker", {
+      callback: data =>
+        setSelectedImages(
+          data?.photos.map(p => ({
+            id: p.id,
+            filename: p.filename,
+            localUri: p.localUri,
+            mediaType: p.mediaType
+          })) || []
+        ),
+      max: 9 - cameraImages.length,
+      selected: selectedImages
+    });
   const cancel = () => console.log("cancel :");
   const camera = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -65,11 +74,9 @@ function FeedbackForm(props) {
     }
 
     const pickerResult = await ImagePicker.launchCameraAsync();
-    if (pickerResult.cancelled === true) {
-      return;
-    }
-
-    setSelectedImage({ localUri: pickerResult.uri });
+    if (pickerResult.cancelled === true) return;
+    console.log('pickerResult :', pickerResult);
+    setCameraImages([...cameraImages, { localUri: pickerResult.uri }]);
   };
 
   const actions = [camera, imagesPicker, cancel];
@@ -111,7 +118,6 @@ function FeedbackForm(props) {
 
       <ListItem
         title={"图片"}
-        // onPress={openImagePickerAsync}
         onPress={showActionSheet}
         rightIcon={<AntDesign name={"picture"} size={20} color={"#2089dc"} />}
         bottomDivider
@@ -122,18 +128,28 @@ function FeedbackForm(props) {
         rightIcon={<AntDesign name={"paperclip"} size={20} color={"#2089dc"} />}
       />
 
-      {selectedImage ? (
-        <View style={{ padding: 10, backgroundColor: "#FFF", marginTop: 20 }}>
-          <Image
-            source={{ uri: selectedImage.localUri }}
-            containerStyle={{
-              paddingRight: 10,
-              width: 100,
-              height: 100,
-              borderRadius: 20
-            }}
-            PlaceholderContent={<ActivityIndicator />}
-          />
+      {selectedImages?.length || cameraImages?.length ? (
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            backgroundColor: "#FFF",
+            marginTop: 20,
+            flexWrap: "wrap"
+          }}
+        >
+          {[...cameraImages, ...selectedImages].map(image => (
+            <Image
+              key={image.localUri}
+              source={{ uri: image.localUri }}
+              containerStyle={{
+                marginRight: 4,
+                width: 80,
+                height: 80
+              }}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          ))}
         </View>
       ) : null}
 
