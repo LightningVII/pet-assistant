@@ -4,6 +4,7 @@ import { ThemeProvider } from "react-native-elements";
 import HomeApp from "./HomeApp";
 import Store from "./redux/Store";
 import * as Font from "expo-font";
+
 import {
   ActionSheetProvider,
   connectActionSheet
@@ -13,14 +14,17 @@ const theme = {
   colors: {}
 };
 
-const App = (props: any) => {
+const App = props => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    Font.loadAsync({
-      antoutline: require("@ant-design/icons-react-native/fonts/antoutline.ttf"),
-      antfill: require("@ant-design/icons-react-native/fonts/antfill.ttf")
-    }).then(() => setIsReady(true));
+    (async function() {
+      await Font.loadAsync({
+        antoutline: require("@ant-design/icons-react-native/fonts/antoutline.ttf"),
+        antfill: require("@ant-design/icons-react-native/fonts/antfill.ttf")
+      });
+      setIsReady(true);
+    })();
   }, []);
 
   if (!isReady) return null;

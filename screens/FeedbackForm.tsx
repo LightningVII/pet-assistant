@@ -43,18 +43,18 @@ const styles = {
 
 function FeedbackForm(props) {
   const { navigation, route } = props;
-  const [checked, setChecked] = useState(true);
+  const [isIllegal, setIsIllegal] = useState(true);
   const [selectedImages, setSelectedImages] = useState([]);
   const [cameraImages, setCameraImages] = useState([]);
-  const [language, setLanguage] = useState();
+  const [content, setContent] = useState();
   const { showActionSheetWithOptions } = useActionSheet();
   const [isVisible, setIsVisible] = useState(false);
   const [source, setSource] = useState();
 
   useEffect(() => {
     if (route?.params?.type === "update") {
-      setLanguage("111");
-      setChecked(true);
+      setContent("111");
+      setIsIllegal(true);
       setSelectedImages([
         {
           id: "B84E8479-475C-4727-A4A4-B77AA9980897/L0/001",
@@ -120,8 +120,8 @@ function FeedbackForm(props) {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
         <Input
-          value={language}
-          onChange={e => setLanguage(e.nativeEvent.text)}
+          value={content}
+          onChange={e => setContent(e?.nativeEvent?.text)}
           // ref={component => (this._textInput = component)}
           containerStyle={styles.input}
           inputContainerStyle={{ borderBottomWidth: 0 }}
@@ -131,14 +131,14 @@ function FeedbackForm(props) {
         />
         <CheckBox
           containerStyle={styles.checkBox}
-          title={checked ? "违规" : "合法"}
+          title={isIllegal ? "违规" : "合法"}
           iconType="material"
           checkedIcon="clear"
           uncheckedIcon="check"
           checkedColor="red"
           uncheckedColor="green"
-          checked={checked}
-          onPress={() => setChecked(!checked)}
+          checked={isIllegal}
+          onPress={() => setIsIllegal(!isIllegal)}
         />
 
         <ListItem

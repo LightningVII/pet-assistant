@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, AsyncStorage } from "react-native";
 import {
   WhiteSpace,
   Button,
@@ -7,8 +7,11 @@ import {
   InputItem,
   Icon
 } from "@ant-design/react-native";
-import {colors} from "react-native-elements"
+import { colors } from "react-native-elements";
 import { LinearGradient } from "expo-linear-gradient";
+import { connect } from "react-redux";
+import * as Actions from "../redux/userActions.js";
+
 const image = require("../assets/icon.png");
 
 const UselessTextInputMultiline = ({
@@ -40,8 +43,11 @@ const UselessTextInputMultiline = ({
   );
 };
 
-export default function(props) {
-
+export default connect(
+  () => ({}),
+  Actions
+)(function(props) {
+  const { fetchLogin } = props;
   const [password, setPassword] = useState();
   const [username, setUsername] = useState();
   return (
@@ -76,17 +82,26 @@ export default function(props) {
           icon="lock"
         />
         <WhiteSpace size="lg" />
-        
-        <Button style={{ borderColor: "#FFF" }} type="primary" onPress={() => {
-          Toast.info("login success")
-          props.navigation.navigate("RemoteSensingTaskList")
-        }}>
+
+        <Button
+          style={{ borderColor: "#FFF" }}
+          type="primary"
+          onPress={async () => {
+            const { payload } = await fetchLogin({
+              username,
+              password
+            });
+            await AsyncStorage.setItem("userid", payload?.content?.userid);
+            Toast.info("login success");
+            props.navigation.navigate("RemoteSensingTaskList");
+          }}
+        >
           登陆
         </Button>
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

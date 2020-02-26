@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Button, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Button, Text, View, AsyncStorage } from "react-native";
 import { NavigationNativeContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -11,6 +11,8 @@ import RemoteSensingTaskDetail from "./screens/RemoteSensingTaskDetail";
 import FeedbackForm from "./screens/FeedbackForm";
 import ImagesPicker from "./screens/ImagesPicker";
 import Login from "./screens/Login";
+import { connect } from "react-redux";
+import * as Actions from "./redux/userActions.js";
 
 const Stack = createStackNavigator();
 const BadgedIcon = withBadge()(Icon);
@@ -30,8 +32,28 @@ const options = {
   )
 };
 
-export default () => {
-  let initialRouteName = 1 ? "Login" : "RemoteSensingTaskList";
+export default connect(
+  () => ({}),
+  Actions
+)(props => {
+  const [isReady, setIsReady] = useState(false);
+  const [initialRouteName, setInitialRouteName] = useState("Login");
+
+  useEffect(() => {
+    (async function() {
+      const { fetchMe } = props;
+      const userid = await AsyncStorage.getItem("userid");
+      console.log("useridasdfas---0--00 :", userid);
+      if (userid) {
+        const user = await fetchMe(userid);
+        console.log("user :", user);
+        setInitialRouteName("RemoteSensingTaskList");
+      }
+
+      setIsReady(true);
+    })();
+  }, []);
+  if (!isReady) return null;
 
   return (
     <NavigationNativeContainer>
@@ -55,4 +77,4 @@ export default () => {
       </Stack.Navigator>
     </NavigationNativeContainer>
   );
-};
+});

@@ -35,19 +35,19 @@ const list = [
 ];
 
 function RemoteSensingTaskList(props) {
-  const { navigation, fetchTodos, remoteSensing } = props;
+  const { navigation, fetchChangespotList, remoteSensing } = props;
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetchTodos({ aa: 1 });
+    fetchChangespotList();
   }, []);
 
   const updateSearch = search => setSearch(search);
 
   const _onRefresh = () => {
     setRefreshing(true);
-    fetchTodos({ aa: 2 }).then(() => setRefreshing(false));
+    // fetchLogin({ aa: 2 }).then(() => setRefreshing(false));
   };
 
   const keyExtractor = (item, index) => index.toString();
