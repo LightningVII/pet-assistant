@@ -8,11 +8,14 @@ import {
   ActivityIndicator,
   Picker
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextareaItem } from "@ant-design/react-native";
+import moment from "moment";
 import {
   Button,
   Input,
   CheckBox,
+  Overlay,
   ListItem,
   Image,
   colors
@@ -21,6 +24,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import PicturePreview from "../components/PicturePreview";
+import { connect } from "react-redux";
+import * as Actions from "../redux/remoteSensingActions.js";
 
 const styles = {
   checkBox: {
@@ -42,19 +47,42 @@ const styles = {
 };
 
 function FeedbackForm(props) {
-  const { navigation, route } = props;
-  const [isIllegal, setIsIllegal] = useState(true);
+  const {
+    navigation,
+    route,
+    user,
+    fetchChangespotImplement,
+    fetchChangespotUpload
+  } = props;
+  // const [isIllegal, setIsIllegal] = useState(true);
   const [selectedImages, setSelectedImages] = useState([]);
   const [cameraImages, setCameraImages] = useState([]);
   const [content, setContent] = useState();
+  const [remark, setRemark] = useState();
   const { showActionSheetWithOptions } = useActionSheet();
   const [isVisible, setIsVisible] = useState(false);
   const [source, setSource] = useState();
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
+  const params = {
+    tbbm: route?.params?.tbbm,
+    czsj: moment(date).format("YYYY-MM-DD"),
+    czry: user?.user?.userid,
+    czyj: content,
+    // fj: "",
+    remark
+  };
 
   useEffect(() => {
     if (route?.params?.type === "update") {
       setContent("111");
-      setIsIllegal(true);
+      // setIsIllegal(true);
       setSelectedImages([
         {
           id: "B84E8479-475C-4727-A4A4-B77AA9980897/L0/001",
@@ -68,7 +96,7 @@ function FeedbackForm(props) {
   }, []);
 
   navigation.setOptions({
-    headerTitle: "请填写反馈报告"
+    headerTitle: "请填写执行报告"
   });
 
   const imagesPicker = () =>
@@ -79,6 +107,7 @@ function FeedbackForm(props) {
             id: p.id,
             filename: p.filename,
             localUri: p.localUri,
+            uri: p.uri,
             mediaType: p.mediaType
           })) || []
         ),
@@ -125,11 +154,37 @@ function FeedbackForm(props) {
           // ref={component => (this._textInput = component)}
           containerStyle={styles.input}
           inputContainerStyle={{ borderBottomWidth: 0 }}
-          label={"填写反馈信息"}
-          placeholder="备注"
+          label={"填写执行信息"}
+          // placeholder="填写执行信息"
           multiline
         />
-        <CheckBox
+
+        <Input
+          value={remark}
+          onChange={e => setRemark(e?.nativeEvent?.text)}
+          // ref={component => (this._textInput = component)}
+          containerStyle={styles.input}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
+          label={"备注"}
+          // placeholder="填写执行信息"
+          multiline
+        />
+
+        <ListItem
+          style={{ marginTop: 20, marginBottom: 20 }}
+          title="执行日期"
+          onPress={showActionSheet}
+          rightIcon={
+            <Button
+              buttonStyle={{ paddingTop: 0, paddingBottom: 0 }}
+              type="clear"
+              onPress={() => setShow(true)}
+              title={moment(date).format("YYYY-MM-DD")}
+            />
+          }
+          bottomDivider
+        />
+        {/* <CheckBox
           containerStyle={styles.checkBox}
           title={isIllegal ? "违规" : "合法"}
           iconType="material"
@@ -139,7 +194,7 @@ function FeedbackForm(props) {
           uncheckedColor="green"
           checked={isIllegal}
           onPress={() => setIsIllegal(!isIllegal)}
-        />
+        /> */}
 
         <ListItem
           title={"图片"}
@@ -192,12 +247,39 @@ function FeedbackForm(props) {
           isVisible={isVisible}
           source={source}
         />
+
+        <Overlay
+          isVisible={show}
+          height="auto"
+          onBackdropPress={() => setShow(false)}
+        >
+          <DateTimePicker
+            testID="dateTimePicker"
+            timeZoneOffsetInMinutes={0}
+            value={date}
+            mode="date"
+            is24Hour={true}
+            locale="zh-CN"
+            display="default"
+            onChange={onChange}
+          />
+        </Overlay>
       </View>
       <View style={{ padding: 10 }}>
         <Button
           buttonStyle={{ backgroundColor: colors.warning }}
-          onPress={() => navigation.goBack()}
-          title="提交反馈"
+          onPress={async () => {
+            const fj = await fetchChangespotUpload([
+              ...cameraImages,
+              ...selectedImages
+            ]);
+            const data = await fetchChangespotImplement({
+              ...params,
+              fj: fj?.content
+            });
+            navigation.goBack();
+          }}
+          title="提交执行"
         />
       </View>
 
@@ -207,4 +289,7 @@ function FeedbackForm(props) {
   );
 }
 
-export default FeedbackForm;
+export default connect(
+  ({ remoteSensing, user }) => ({ remoteSensing, user }),
+  Actions
+)(FeedbackForm);

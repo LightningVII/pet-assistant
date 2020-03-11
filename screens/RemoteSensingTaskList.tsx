@@ -11,43 +11,62 @@ import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
 import { SearchBar, ListItem, colors } from "react-native-elements";
 
-const list = [
-  {
-    name: "2020年第2期",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "2020年第3期",
-    subtitle: "Vice President"
-  },
-  {
-    name: "2020年第2期",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "2020年第3期",
-    subtitle: "Vice President"
-  },
-  {
-    name: "2020年第2期",
-    subtitle: "Vice Chairman"
-  }
-];
+// const list = [
+//   {
+//     tbbm: "7788",
+//     name: "2020年第2期",
+//     subtitle: "Vice Chairman"
+//   },
+//   {
+//     tbbm: "778",
+//     name: "2020年第3期",
+//     subtitle: "Vice President"
+//   },
+//   {
+//     tbbm: "78",
+//     name: "2020年第2期",
+//     subtitle: "Vice Chairman"
+//   },
+//   {
+//     tbbm: "77s88",
+//     name: "2020年第3期",
+//     subtitle: "Vice President"
+//   },
+//   {
+//     tbbm: "7sd788",
+//     name: "2020年第2期",
+//     subtitle: "Vice Chairman"
+//   }
+// ];
 
 function RemoteSensingTaskList(props) {
-  const { navigation, fetchChangespotList, remoteSensing } = props;
+  const { navigation, fetchChangespotList, remoteSensing, user } = props;
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
+  const [pageNum, setPageNum] = useState(1);
+  const { remoteSensingList: list } = remoteSensing || {};
 
   useEffect(() => {
-    fetchChangespotList();
+    console.log("11111------- :");
+    fetchChangespotList({
+      userId: user?.user?.userid,
+      pageNum: pageNum,
+      pageSize: 200,
+      term: search
+    });
   }, []);
 
   const updateSearch = search => setSearch(search);
 
   const _onRefresh = () => {
     setRefreshing(true);
-    // fetchLogin({ aa: 2 }).then(() => setRefreshing(false));
+    setPageNum(pageNum + 1);
+    fetchChangespotList({
+      userId: user?.user?.userid,
+      pageNum: pageNum + 1,
+      pageSize: 200,
+      term: search
+    }).then(() => setRefreshing(false));
   };
 
   const keyExtractor = (item, index) => index.toString();
@@ -55,11 +74,10 @@ function RemoteSensingTaskList(props) {
   const renderItem = ({ item }) => (
     <ListItem
       onPress={() => navigation.navigate("RemoteSensingTaskDetail", item)}
-      title={item.name}
-      subtitle={item.subtitle}
+      title={item.county}
+      subtitle={item.location}
       leftAvatar={{
-        source: item.avatar_url && { uri: item.avatar_url },
-        title: item.name[0]
+        title: item.qsxbhdl
       }}
       bottomDivider
       chevron
@@ -71,10 +89,19 @@ function RemoteSensingTaskList(props) {
       <View style={{ flex: 1 }}>
         {/* <Text>{remoteSensing?.batchList?.data?.title}</Text> */}
         <SearchBar
-          placeholder="Type Here..."
+          placeholder="查询..."
           lightTheme={true}
           onChangeText={updateSearch}
           value={search}
+          onBlur={() => {
+            setPageNum(1);
+            fetchChangespotList({
+              userId: user?.user?.userid,
+              pageNum: 1,
+              pageSize: 200,
+              term: search
+            });
+          }}
         />
         <FlatList
           keyExtractor={keyExtractor}
@@ -91,6 +118,6 @@ function RemoteSensingTaskList(props) {
 }
 
 export default connect(
-  ({ remoteSensing }) => ({ remoteSensing }),
+  ({ remoteSensing, user }) => ({ remoteSensing, user }),
   Actions
 )(RemoteSensingTaskList);

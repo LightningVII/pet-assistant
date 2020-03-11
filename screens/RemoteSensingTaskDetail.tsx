@@ -9,6 +9,9 @@ import {
   SafeAreaView
 } from "react-native";
 import { Card, ListItem, Button, Icon, colors } from "react-native-elements";
+import { connect } from "react-redux";
+import * as Actions from "../redux/remoteSensingActions.js";
+
 const { width } = Dimensions.get("window");
 
 const users = [
@@ -48,10 +51,14 @@ const styles = {
   name: {}
 };
 
-export default function RemoteSensingTaskDetail(props) {
+export default connect(
+  ({ remoteSensing, user }) => ({ remoteSensing, user }),
+  Actions
+)(function RemoteSensingTaskDetail(props) {
   const { navigation, route } = props;
   const { params } = route;
-  // { navigation }
+
+  console.log("RemoteSensingTaskDetail, :", params.tbbm);
   navigation.setOptions({
     headerTitle: params.name,
     headerTitleContainerStyle: {
@@ -98,7 +105,7 @@ export default function RemoteSensingTaskDetail(props) {
           {aaa.map(({ name }, index) => (
             <View key={index.toString()}>
               <ListItem
-                title={"执行人反馈"}
+                title={"执行人报告"}
                 subtitle={"时间：111"}
                 subtitleStyle={styles.subtitleStyle}
                 topDivider
@@ -109,7 +116,11 @@ export default function RemoteSensingTaskDetail(props) {
                   name: "edit",
                   type: "antdesign",
                   color: colors.primary,
-                  onPress: () => navigation.navigate("FeedbackForm", { type: "update" })
+                  onPress: () =>
+                    navigation.navigate("FeedbackForm", {
+                      type: "update",
+                      tbbm: params.tbbm
+                    })
                 }}
               />
               <View
@@ -127,7 +138,7 @@ export default function RemoteSensingTaskDetail(props) {
                       paddingTop: 0
                     }}
                   >
-                    执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈,执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈执行人反馈
+                    执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告,执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告
                   </Text>
                 </View>
                 {name === "地址" ? (
@@ -149,10 +160,12 @@ export default function RemoteSensingTaskDetail(props) {
 
       <View style={{ padding: 10 }}>
         <Button
-          onPress={() => navigation.navigate("FeedbackForm")}
-          title="填写反馈"
+          onPress={() =>
+            navigation.navigate("FeedbackForm", { tbbm: params.tbbm })
+          }
+          title="填写执行"
         />
       </View>
     </SafeAreaView>
   );
-}
+});

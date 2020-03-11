@@ -1,11 +1,11 @@
-import { RECEIVE_TODOS, SAVE_USER } from "../redux/remoteSensingActions";
+import { REMOTE_SENSING_LIST } from "../redux/remoteSensingActions";
 
 export default (state = {}, { type, payload }) => {
   switch (type) {
-    case RECEIVE_TODOS:
+    case REMOTE_SENSING_LIST:
       return {
         ...state,
-        batchList: payload
+        remoteSensingList: payload?.content?.list
       };
 
     default:

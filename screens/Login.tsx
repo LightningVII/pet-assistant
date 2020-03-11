@@ -91,7 +91,7 @@ export default connect(
               username,
               password
             });
-            await AsyncStorage.setItem("userid", payload?.content?.userid);
+            await AsyncStorage.setItem("userid", payload?.userid);
             Toast.info("login success");
             props.navigation.navigate("RemoteSensingTaskList");
           }}

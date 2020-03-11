@@ -5,7 +5,7 @@ export default (state = {}, { type, payload }) => {
     case SAVE_USER:
       return {
         ...state,
-        user: payload?.content
+        user: payload
       };
 
     default:

@@ -8,17 +8,16 @@ export const fetchMe = id => async dispatch => {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     data: qs.stringify({ id }),
-    url: url + "/login"
+    url: url + "/sys/user/info"
   };
 
-  // const { data } = await axios(options);
-  const { data } = await new Promise(resolve =>
-    setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
-  );
-  console.log("fetchMe", data);
+  const { data } = await axios(options);
+  // const { data } = await new Promise(resolve =>
+  //   setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
+  // );
   return dispatch({
     type: SAVE_USER,
-    payload: data
+    payload: data.content
   });
 };
 
@@ -30,14 +29,12 @@ export const fetchLogin = params => async dispatch => {
     url: url + "/login"
   };
 
-  console.log("fetchLogin", params);
-  // const { data } = await axios(options);
-  const { data } = await new Promise(resolve =>
-    setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
-  );
-  console.log("fetchLogin", data);
+  const { data } = await axios(options);
+  // const { data } = await new Promise(resolve =>
+  //   setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
+  // );
   return dispatch({
     type: SAVE_USER,
-    payload: data
+    payload: data.content.user
   });
 };
