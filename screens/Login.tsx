@@ -93,7 +93,9 @@ export default connect(
             });
             await AsyncStorage.setItem("userid", payload?.userid);
             Toast.info("login success");
-            props.navigation.navigate("RemoteSensingTaskList");
+            props.navigation.canGoBack()
+              ? props.navigation.goBack()
+              : props.navigation.navigate("RemoteSensingTaskList");
           }}
         >
           登陆
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: colors.primary
+    backgroundColor: "#f3f3f3" || colors.primary
   },
   icon: {
     width: 100,

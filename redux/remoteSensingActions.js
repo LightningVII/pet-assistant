@@ -1,6 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 export const REMOTE_SENSING_LIST = "REMOTE_SENSING_LIST";
+export const REMOTE_SENSING_IMPLEMENT_INFO = "REMOTE_SENSING_IMPLEMENT_INFO";
 const url = "http://qs.vipgz4.idcfengye.com";
 
 export const fetchChangespotList = payload => async dispatch => {
@@ -21,6 +22,21 @@ export const fetchChangespotList = payload => async dispatch => {
   console.log("fetchChangespotList", data);
   return dispatch({
     type: REMOTE_SENSING_LIST,
+    payload: data
+  });
+};
+
+export const fetchChangespotImplementInfo = payload => async dispatch => {
+  const options = {
+    method: "GET",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    url: url + "/changespot/implementInfo?" + qs.stringify(payload)
+  };
+
+  const { data } = await axios(options);
+
+  return dispatch({
+    type: REMOTE_SENSING_IMPLEMENT_INFO,
     payload: data
   });
 };

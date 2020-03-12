@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Flex, WhiteSpace, WingBlank } from "@ant-design/react-native";
 import {
   ScrollView,
@@ -11,39 +11,11 @@ import {
 import { Card, ListItem, Button, Icon, colors } from "react-native-elements";
 import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
+import { AntDesign } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
-const users = [
-  {
-    name: "brynn",
-    avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg"
-  }
-];
-
-const aaa = [
-  {
-    name: "县区",
-    avatar: "沛县"
-  },
-  {
-    name: "地址",
-    avatar: "沛城镇"
-  },
-
-  {
-    name: "变动前",
-    avatar: "建筑用地（无定着物）"
-  },
-  {
-    name: "变动后",
-    avatar: "建筑用地（有定着物）"
-  },
-  {
-    name: "变更面积",
-    avatar: "9181.7平方米"
-  }
-];
+const STATUS = ["接收任务", "任务下发", "执行", "关闭"];
 
 const styles = {
   subtitleStyle: { color: colors.grey2, marginTop: 5 },
@@ -51,16 +23,37 @@ const styles = {
   name: {}
 };
 
+const Item = props => (
+  <ListItem
+    titleStyle={{
+      fontSize: 14,
+      color: colors.grey2,
+      marginBottom: 10
+    }}
+    subtitleStyle={{ fontSize: 18 }}
+    bottomDivider
+    {...props}
+  />
+);
+
 export default connect(
   ({ remoteSensing, user }) => ({ remoteSensing, user }),
   Actions
 )(function RemoteSensingTaskDetail(props) {
-  const { navigation, route } = props;
+  const {
+    navigation,
+    route,
+    fetchChangespotImplementInfo,
+    remoteSensing
+  } = props;
   const { params } = route;
 
-  console.log("RemoteSensingTaskDetail, :", params.tbbm);
+  useEffect(() => {
+    fetchChangespotImplementInfo({ tbbm: params.tbbm });
+  }, []);
+
   navigation.setOptions({
-    headerTitle: params.name,
+    headerTitle: params.batch,
     headerTitleContainerStyle: {
       width: 200
     }
@@ -73,88 +66,98 @@ export default connect(
           containerStyle={{ borderWidth: 0, padding: 0, margin: 0 }}
           title={
             <ListItem
-              title={"分配人"}
-              subtitle={"时间：111"}
+              title={params.county}
+              subtitle={params.batch}
               subtitleStyle={styles.subtitleStyle}
-              leftAvatar={{
-                source: { uri: users[0]?.avatar }
-              }}
+              leftAvatar={<Text>{STATUS[params.state]}</Text>}
             />
           }
         >
-          {aaa.map((u, i) => {
-            return (
-              <ListItem
-                key={i}
-                title={u.name}
-                titleStyle={{
-                  fontSize: 14,
-                  color: colors.grey2,
-                  marginBottom: 10
-                }}
-                subtitle={u.avatar}
-                subtitleStyle={{ fontSize: 18 }}
-                bottomDivider={i + 1 !== aaa.length}
-                topDivider={i === 0}
-              />
-            );
-          })}
+          <Item title={"位置"} subtitle={params.location} topDivider />
+          <Item title={"面积（亩）"} subtitle={params.area} />
+          <Item title={"前时相"} subtitle={params.qsx} />
+          <Item title={"后时相"} subtitle={params.hsx} />
+          <Item title={"前时相地类名称"} subtitle={params.qsxbhdl} />
+          <Item title={"后时相地类名称"} subtitle={params.hsxbhdl} />
+          <Item title={"前时相变化地类"} subtitle={params.qsxdlmc} />
+          <Item title={"后时相变化地类"} subtitle={params.hsxdlmc} />
         </Card>
 
         <View style={{ marginTop: 20 }}>
-          {aaa.map(({ name }, index) => (
-            <View key={index.toString()}>
-              <ListItem
-                title={"执行人报告"}
-                subtitle={"时间：111"}
-                subtitleStyle={styles.subtitleStyle}
-                topDivider
-                leftAvatar={{
-                  source: { uri: users[0]?.avatar }
-                }}
-                rightIcon={{
-                  name: "edit",
-                  type: "antdesign",
-                  color: colors.primary,
-                  onPress: () =>
-                    navigation.navigate("FeedbackForm", {
-                      type: "update",
-                      tbbm: params.tbbm
-                    })
-                }}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                  backgroundColor: "#FFF",
-                  padding: 15,
-                  paddingTop: 0
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text
-                    style={{
-                      lineHeight: 25,
-                      paddingTop: 0
-                    }}
-                  >
-                    执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告,执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告执行人报告
-                  </Text>
+          {remoteSensing?.feedbackList?.map((item, index) => {
+            const { fjs, czry, czsj, czyj, remark, zxstate } = item;
+            return (
+              <View key={index.toString()}>
+                <ListItem
+                  title={czry}
+                  subtitle={`时间：${czsj}`}
+                  subtitleStyle={styles.subtitleStyle}
+                  topDivider
+                  leftAvatar={
+                    zxstate ? (
+                      // <AntDesign name={"right"} color={"green"} size={20} />
+                      <Text>已审批</Text>
+                    ) : (
+                      // <AntDesign name={"close"} color={"red"} size={20} />
+                      <Text>未审批</Text>
+                    )
+                  }
+                  /* rightIcon={{
+                    name: "edit",
+                    type: "antdesign",
+                    color: colors.primary,
+                    onPress: () =>
+                      navigation.navigate("FeedbackForm", {
+                        type: "update",
+                        tbbm: params.tbbm,
+                        ...item
+                      })
+                  }} */
+                />
+                {/* zxstate */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    backgroundColor: "#FFF",
+                    padding: 15,
+                    paddingTop: 0
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={{
+                        lineHeight: 25,
+                        paddingTop: 0
+                      }}
+                    >
+                      {czyj}
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: 25,
+                        paddingTop: 0
+                      }}
+                    >
+                      {remark}
+                    </Text>
+                  </View>
+                  {fjs?.length ? (
+                    <Image
+                      source={{
+                        uri: fjs[0]
+                      }}
+                      style={{
+                        marginLeft: 15,
+                        width: width * 0.3,
+                        height: width * 0.3,
+                        borderRadius: 15
+                      }}
+                    />
+                  ) : null}
                 </View>
-                {name === "地址" ? (
-                  <Image
-                    source={require("../assets/icon.png")}
-                    style={{
-                      marginLeft: 15,
-                      width: width * 0.3,
-                      height: width * 0.3,
-                      borderRadius: 15
-                    }}
-                  />
-                ) : null}
               </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </ScrollView>
 

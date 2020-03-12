@@ -81,17 +81,11 @@ function FeedbackForm(props) {
 
   useEffect(() => {
     if (route?.params?.type === "update") {
-      setContent("111");
-      // setIsIllegal(true);
-      setSelectedImages([
-        {
-          id: "B84E8479-475C-4727-A4A4-B77AA9980897/L0/001",
-          filename: "IMG_0002.JPG",
-          localUri:
-            "file:///Users/Ace/Library/Developer/CoreSimulator/Devices/1C32C990-EF2C-4212-BE5C-547F8BC2816D/data/Media/DCIM/100APPLE/IMG_0002.JPG",
-          mediaType: "photo"
-        }
-      ]);
+      const { fjs, czry, czsj, czyj, remark, zxstate } = route?.params;
+      setSelectedImages(fjs?.map(localUri => ({ localUri })));
+      setContent(czyj);
+      setRemark(remark);
+      setDate(czsj);
     }
   }, []);
 

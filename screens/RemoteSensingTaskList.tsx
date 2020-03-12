@@ -47,10 +47,9 @@ function RemoteSensingTaskList(props) {
   const { remoteSensingList: list } = remoteSensing || {};
 
   useEffect(() => {
-    console.log("11111------- :");
     fetchChangespotList({
-      userId: user?.user?.userid,
-      pageNum: pageNum,
+      userid: user?.user?.userid,
+      pageNum,
       pageSize: 200,
       term: search
     });
@@ -60,10 +59,10 @@ function RemoteSensingTaskList(props) {
 
   const _onRefresh = () => {
     setRefreshing(true);
-    setPageNum(pageNum + 1);
+    // setPageNum(pageNum + 1);
     fetchChangespotList({
-      userId: user?.user?.userid,
-      pageNum: pageNum + 1,
+      userid: user?.user?.userid,
+      pageNum: pageNum,
       pageSize: 200,
       term: search
     }).then(() => setRefreshing(false));
@@ -96,7 +95,7 @@ function RemoteSensingTaskList(props) {
           onBlur={() => {
             setPageNum(1);
             fetchChangespotList({
-              userId: user?.user?.userid,
+              userid: user?.user?.userid,
               pageNum: 1,
               pageSize: 200,
               term: search

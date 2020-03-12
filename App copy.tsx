@@ -3,7 +3,6 @@ import { StyleSheet, ImageBackground, Text, TextInput, View, Image } from 'react
 import * as Font from 'expo-font';
 import { WingBlank, WhiteSpace, Button, Provider, Toast, InputItem, Icon } from '@ant-design/react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { WebView } from 'react-native-webview';
 
 const image = require('./assets/wallhaven-358106-1.jpg');
 const bg = require('./assets/timg.jpeg')
