@@ -1,17 +1,16 @@
-import React, { useEffect } from "react";
-import { Flex, WhiteSpace, WingBlank } from "@ant-design/react-native";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Dimensions,
   View,
   Text,
   Image,
+  RefreshControl,
   SafeAreaView
 } from "react-native";
-import { Card, ListItem, Button, Icon, colors } from "react-native-elements";
+import { Card, ListItem, Button, colors } from "react-native-elements";
 import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
-import { AntDesign } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -40,21 +39,9 @@ export default connect(
   ({ remoteSensing, user }) => ({ remoteSensing, user }),
   Actions
 )(function RemoteSensingTaskDetail(props) {
-  const {
-    navigation,
-    route,
-    fetchChangespotImplementInfo,
-    fetchChangespotInfo,
-    remoteSensing
-  } = props;
+  const { navigation, route, fetchChangespotInfo, remoteSensing } = props;
   const { params } = route;
   const { tbbm } = params;
-
-  console.log(
-    "remoteSensingInfo",
-    remoteSensing?.remoteSensingInfo?.changespot,
-    remoteSensing?.remoteSensingInfo?.spotImplements
-  );
 
   const {
     batch,
@@ -71,8 +58,11 @@ export default connect(
   } = remoteSensing?.remoteSensingInfo?.changespot || {};
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchChangespotInfo({ tbbm });
+    });
     fetchChangespotInfo({ tbbm });
-    // fetchChangespotImplementInfo({ tbbm });
+    return unsubscribe;
   }, []);
 
   navigation.setOptions({
@@ -82,9 +72,18 @@ export default connect(
     }
   });
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const _onRefresh = async () => {
+    setRefreshing(true);
+    await fetchChangespotInfo({ tbbm });
+    setRefreshing(false);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView style={{ flex: 1, backgroundColor: colors.grey5 }}>
+        <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
         <Card
           containerStyle={{ borderWidth: 0, padding: 0, margin: 0 }}
           title={
@@ -126,17 +125,17 @@ export default connect(
                         <Text>未审批</Text>
                       )
                     }
-                    /* rightIcon={{
-                    name: "edit",
-                    type: "antdesign",
-                    color: colors.primary,
-                    onPress: () =>
-                      navigation.navigate("FeedbackForm", {
-                        type: "update",
-                        tbbm,
-                        ...item
-                      })
-                  }} */
+                    rightIcon={{
+                      name: "edit",
+                      type: "antdesign",
+                      color: colors.primary,
+                      onPress: () =>
+                        navigation.navigate("FeedbackForm", {
+                          type: "update",
+                          tbbm,
+                          ...item
+                        })
+                    }}
                   />
                   <View
                     style={{

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
-  Text,
   View,
   FlatList,
   RefreshControl,
@@ -11,33 +9,6 @@ import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
 import { SearchBar, ListItem, colors } from "react-native-elements";
 
-// const list = [
-//   {
-//     tbbm: "7788",
-//     name: "2020年第2期",
-//     subtitle: "Vice Chairman"
-//   },
-//   {
-//     tbbm: "778",
-//     name: "2020年第3期",
-//     subtitle: "Vice President"
-//   },
-//   {
-//     tbbm: "78",
-//     name: "2020年第2期",
-//     subtitle: "Vice Chairman"
-//   },
-//   {
-//     tbbm: "77s88",
-//     name: "2020年第3期",
-//     subtitle: "Vice President"
-//   },
-//   {
-//     tbbm: "7sd788",
-//     name: "2020年第2期",
-//     subtitle: "Vice Chairman"
-//   }
-// ];
 
 function RemoteSensingTaskList(props) {
   const { navigation, fetchChangespotList, remoteSensing, user } = props;

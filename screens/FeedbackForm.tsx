@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {
-  Text,
+  Alert,
   View,
-  SafeAreaView,
-  TextInput,
   TouchableWithoutFeedback,
-  ActivityIndicator,
-  Picker
+  ActivityIndicator
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { TextareaItem } from "@ant-design/react-native";
 import moment from "moment";
 import {
   Button,
   Input,
-  CheckBox,
   Overlay,
   ListItem,
   Image,
@@ -23,8 +18,9 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
-import PicturePreview from "../components/PicturePreview";
 import { connect } from "react-redux";
+import PicturePreview from "../components/PicturePreview";
+import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
 
 const styles = {
@@ -54,9 +50,10 @@ function FeedbackForm(props) {
     fetchChangespotImplement,
     fetchChangespotUpload
   } = props;
-  // const [isIllegal, setIsIllegal] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [cameraImages, setCameraImages] = useState([]);
+  const [oriImages, setOriImages] = useState([]);
   const [content, setContent] = useState();
   const [remark, setRemark] = useState();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -82,7 +79,16 @@ function FeedbackForm(props) {
   useEffect(() => {
     if (route?.params?.type === "update") {
       const { fjs, czry, czsj, czyj, remark, zxstate } = route?.params;
-      setSelectedImages(fjs?.map(localUri => ({ localUri })));
+      setOriImages(
+        fjs?.map(localUri => {
+          let tempArr = localUri.split(".");
+          tempArr = tempArr[tempArr.length - 2].split("/");
+          return {
+            localUri,
+            id: tempArr[tempArr.length - 1]
+          };
+        })
+      );
       setContent(czyj);
       setRemark(remark);
       setDate(czsj);
@@ -140,7 +146,7 @@ function FeedbackForm(props) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <SafeAreaViewLoading loading={loading}>
       <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
         <Input
           value={content}
@@ -196,15 +202,15 @@ function FeedbackForm(props) {
           rightIcon={<AntDesign name={"picture"} size={20} color={"#2089dc"} />}
           bottomDivider
         />
-        <ListItem
+        {/* <ListItem
           title={"附件"}
           onPress={() => {}}
           rightIcon={
             <AntDesign name={"paperclip"} size={20} color={"#2089dc"} />
           }
-        />
+        /> */}
 
-        {selectedImages?.length || cameraImages?.length ? (
+        {selectedImages?.length || cameraImages?.length || oriImages?.length ? (
           <View
             style={{
               flexDirection: "row",
@@ -214,7 +220,7 @@ function FeedbackForm(props) {
               flexWrap: "wrap"
             }}
           >
-            {[...cameraImages, ...selectedImages].map(image => (
+            {[...cameraImages, ...selectedImages, ...oriImages].map(image => (
               <TouchableWithoutFeedback
                 key={image.id}
                 onPress={() => {
@@ -230,7 +236,9 @@ function FeedbackForm(props) {
                     width: 80,
                     height: 80
                   }}
-                  PlaceholderContent={<ActivityIndicator />}
+                  PlaceholderContent={
+                    <ActivityIndicator size="large" color="#FFF" />
+                  }
                 />
               </TouchableWithoutFeedback>
             ))}
@@ -263,23 +271,31 @@ function FeedbackForm(props) {
         <Button
           buttonStyle={{ backgroundColor: colors.warning }}
           onPress={async () => {
-            const fj = await fetchChangespotUpload([
-              ...cameraImages,
-              ...selectedImages
-            ]);
-            const data = await fetchChangespotImplement({
+            setLoading(true);
+            const imgs = [...cameraImages, ...selectedImages];
+            let fj;
+            if (imgs?.length) {
+              try {
+                fj = await fetchChangespotUpload(imgs);
+              } catch ({ code, message }) {
+                setLoading(true);
+                Alert.alert("文件上传失败", `${code}-${message}`, [
+                  { text: "知道了" }
+                ]);
+                return;
+              }
+            }
+            await fetchChangespotImplement({
               ...params,
               fj: fj?.content
             });
+            setLoading(true);
             navigation.goBack();
           }}
           title="提交执行"
         />
       </View>
-
-      {/* <TextareaItem rows={4} placeholder="请填写内容" /> */}
-      {/* <Button onPress={() => navigation.goBack()} title="Go back home" /> */}
-    </SafeAreaView>
+    </SafeAreaViewLoading>
   );
 }
 

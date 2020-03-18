@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavigationNativeContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   Text,
@@ -17,7 +17,7 @@ import { FontAwesome, Octicons, MaterialIcons } from '@expo/vector-icons';
 const Stack = createStackNavigator();
 export default function () {
   return (
-    <NavigationNativeContainer>
+    <NavigationContainer>
       <Stack.Navigator headerMode={'screen'} initialRouteName="List">
         <Stack.Screen name="List">
           {props => <List {...props} />}
@@ -26,7 +26,7 @@ export default function () {
           {props => <Article {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
-    </NavigationNativeContainer >
+    </NavigationContainer >
   );
 }
 ;

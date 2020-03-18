@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, AsyncStorage } from "react-native";
-import { NavigationNativeContainer } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -20,27 +20,38 @@ const BadgedIcon = withBadge()(Icon);
 const options = ({ navigation }) => ({
   headerTitle: "我的任务",
   headerRight: props => (
-    <AntDesign name={"search1"} size={20} style={{ marginRight: 20 }} />
-  ),
-  headerLeft: props => (
-    // <BadgedIcon
-    //   type="antdesign"
-    //   name="bells"
-    //   size={20}
-    //   containerStyle={{ marginLeft: 20 }}
-    // />
-    <Button
-      containerStyle={{ marginLeft: 20 }}
+    // <AntDesign name={"search1"} size={20} style={{ marginRight: 20 }} />
+    <AntDesign
       onPress={async () => {
         await AsyncStorage.removeItem("userid");
         navigation.canGoBack()
           ? navigation.goBack()
           : navigation.navigate("Login");
       }}
-      type="clear"
-      title="退出登录"
+      name={"logout"}
+      size={20}
+      style={{ marginRight: 20 }}
     />
   )
+  /* headerLeft: props => (
+    <BadgedIcon
+      type="antdesign"
+      name="bells"
+      size={20}
+      containerStyle={{ marginLeft: 20 }}
+    />
+    <AntDesign
+      onPress={async () => {
+        await AsyncStorage.removeItem("userid");
+        navigation.canGoBack()
+          ? navigation.goBack()
+          : navigation.navigate("Login");
+      }}
+      name={"logout"}
+      size={20}
+      style={{ marginLeft: 20 }}
+    />
+  ) */
 });
 
 export default connect(
@@ -65,7 +76,7 @@ export default connect(
   if (!isReady) return null;
 
   return (
-    <NavigationNativeContainer>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRouteName}>
         <Stack.Screen
           name="RemoteSensingTaskList"
@@ -84,6 +95,6 @@ export default connect(
           component={Login}
         />
       </Stack.Navigator>
-    </NavigationNativeContainer>
+    </NavigationContainer>
   );
 });

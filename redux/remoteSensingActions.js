@@ -44,7 +44,7 @@ export const fetchChangespotImplement = payload => async dispatch => {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
     data: stringify(payload),
-    url: url + "/changespot/implement"
+    url: SERVER_URL + "/changespot/implement"
   };
   return await axios(options);
 };
@@ -75,10 +75,12 @@ export const fetchChangespotUpload = (
   };
 
   const { data } = await axios
-    .post(url + "/changespot/upload", formData, options)
+    .post(SERVER_URL + "/changespot/upload", formData, options)
     .catch(error => {
       throw error;
     });
+
+  console.log('fetchChangespotUpload', data)
 
   return data;
 };

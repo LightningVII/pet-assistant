@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Text, View } from 'react-native';
-import { NavigationNativeContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -66,13 +66,13 @@ function HomeDrawerScreen() {
 
 export default function () {
   return (
-    <NavigationNativeContainer>
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeDrawerScreen} />
         <Stack.Screen name="Article">
           {props => <Article {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
-    </NavigationNativeContainer>
+    </NavigationContainer>
   );
 }
