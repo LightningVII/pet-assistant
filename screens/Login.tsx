@@ -8,7 +8,6 @@ import {
   Icon
 } from "@ant-design/react-native";
 import { colors } from "react-native-elements";
-import { LinearGradient } from "expo-linear-gradient";
 import { connect } from "react-redux";
 import * as Actions from "../redux/userActions.js";
 

@@ -42,6 +42,8 @@ export default connect(
   const { navigation, route, fetchChangespotInfo, remoteSensing } = props;
   const { params } = route;
   const { tbbm } = params;
+  const { remoteSensingInfo } = remoteSensing;
+  const { spotImplements, changespot } = remoteSensingInfo || {};
 
   const {
     batch,
@@ -55,7 +57,7 @@ export default connect(
     hsxbhdl,
     qsxdlmc,
     hsxdlmc
-  } = remoteSensing?.remoteSensingInfo?.changespot || {};
+  } = changespot || {};
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -106,90 +108,103 @@ export default connect(
         </Card>
 
         <View style={{ marginTop: 20 }}>
-          {remoteSensing?.remoteSensingInfo?.spotImplements?.map(
-            (item, index) => {
-              const { fjs, czry, czsj, czyj, remark, zxstate } = item;
-              return (
-                <View key={index.toString()}>
-                  <ListItem
-                    title={czry}
-                    subtitle={`时间：${czsj}`}
-                    subtitleStyle={styles.subtitleStyle}
-                    topDivider
-                    leftAvatar={
-                      zxstate ? (
-                        // <AntDesign name={"right"} color={"green"} size={20} />
-                        <Text>已审批</Text>
-                      ) : (
-                        // <AntDesign name={"close"} color={"red"} size={20} />
-                        <Text>未审批</Text>
-                      )
-                    }
-                    rightIcon={{
-                      name: "edit",
-                      type: "antdesign",
-                      color: colors.primary,
-                      onPress: () =>
-                        navigation.navigate("FeedbackForm", {
-                          type: "update",
-                          tbbm,
-                          ...item
-                        })
-                    }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      backgroundColor: "#FFF",
-                      padding: 15,
-                      paddingTop: 0
-                    }}
-                  >
-                    <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          lineHeight: 25,
-                          paddingTop: 0
-                        }}
-                      >
-                        {czyj}
-                      </Text>
-                      <Text
-                        style={{
-                          lineHeight: 25,
-                          paddingTop: 10
-                        }}
-                      >
-                        {remark}
-                      </Text>
-                    </View>
-                    {fjs?.length ? (
-                      <Image
-                        source={{
-                          uri: fjs[0]
-                        }}
-                        style={{
-                          marginLeft: 15,
-                          width: width * 0.3,
-                          height: width * 0.3,
-                          borderRadius: 15
-                        }}
-                      />
-                    ) : null}
+          {spotImplements?.map(item => {
+            const {
+              fjs,
+              czry,
+              czsj,
+              czyj,
+              remark,
+              zxstate,
+              implementid
+            } = item;
+            const rightIcon = () => {
+              if (zxstate !== 2) return null;
+
+              return {
+                name: "edit",
+                type: "antdesign",
+                color: colors.primary,
+                onPress: () =>
+                  navigation.navigate("FeedbackForm", {
+                    type: "update",
+                    tbbm,
+                    ...item
+                  })
+              };
+            };
+            return (
+              <View key={implementid}>
+                <ListItem
+                  title={czry}
+                  subtitle={`时间：${czsj}`}
+                  subtitleStyle={styles.subtitleStyle}
+                  topDivider
+                  leftAvatar={
+                    <Text
+                      style={{
+                        color: [colors.grey0, colors.success, "red"][zxstate]
+                      }}
+                    >
+                      {["未审批", "已通过", "未通过"][zxstate]}
+                    </Text>
+                  }
+                  rightIcon={rightIcon()}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    backgroundColor: "#FFF",
+                    padding: 15,
+                    paddingTop: 0
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={{
+                        lineHeight: 25,
+                        paddingTop: 0
+                      }}
+                    >
+                      {czyj}
+                    </Text>
+                    <Text
+                      style={{
+                        lineHeight: 25,
+                        paddingTop: 10
+                      }}
+                    >
+                      {remark}
+                    </Text>
                   </View>
+                  {fjs?.length ? (
+                    <Image
+                      source={{
+                        uri: fjs[0]
+                      }}
+                      style={{
+                        marginLeft: 15,
+                        width: width * 0.3,
+                        height: width * 0.3,
+                        borderRadius: 15
+                      }}
+                    />
+                  ) : null}
                 </View>
-              );
-            }
-          )}
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
 
-      <View style={{ padding: 10 }}>
-        <Button
-          onPress={() => navigation.navigate("FeedbackForm", { tbbm })}
-          title="填写执行"
-        />
-      </View>
+      {!spotImplements?.length ? (
+        <View style={{ padding: 10 }}>
+          <Button
+            onPress={() => navigation.navigate("FeedbackForm", { tbbm })}
+            title="填写执行"
+          />
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 });

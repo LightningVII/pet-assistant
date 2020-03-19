@@ -39,6 +39,17 @@ export const fetchChangespotImplementInfo = payload => async dispatch => {
   });
 };
 
+export const fetchChangespotUpdateImplement = payload => async dispatch => {
+  console.log('fetchChangespotUpdateImplement', payload)
+  const options = {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    data: stringify(payload),
+    url: SERVER_URL + "/changespot/updateImplement"
+  };
+  return await axios(options);
+};
+
 export const fetchChangespotImplement = payload => async dispatch => {
   const options = {
     method: "POST",

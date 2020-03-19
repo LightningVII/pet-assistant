@@ -48,6 +48,7 @@ function FeedbackForm(props) {
     route,
     user,
     fetchChangespotImplement,
+    fetchChangespotUpdateImplement,
     fetchChangespotUpload
   } = props;
   const [loading, setLoading] = useState(false);
@@ -72,13 +73,13 @@ function FeedbackForm(props) {
     czsj: moment(date).format("YYYY-MM-DD"),
     czry: user?.user?.userid,
     czyj: content,
-    // fj: "",
     remark
   };
 
   useEffect(() => {
-    if (route?.params?.type === "update") {
-      const { fjs, czry, czsj, czyj, remark, zxstate } = route?.params;
+    const { fjs, czsj, czyj, remark, type } = route?.params;
+
+    if (type === "update") {
       setOriImages(
         fjs?.map(localUri => {
           let tempArr = localUri.split(".");
@@ -278,18 +279,28 @@ function FeedbackForm(props) {
               try {
                 fj = await fetchChangespotUpload(imgs);
               } catch ({ code, message }) {
-                setLoading(true);
+                setLoading(false);
                 Alert.alert("文件上传失败", `${code}-${message}`, [
                   { text: "知道了" }
                 ]);
                 return;
               }
             }
-            await fetchChangespotImplement({
-              ...params,
-              fj: fj?.content
-            });
-            setLoading(true);
+
+            if (route?.params?.type === "update") {
+              await fetchChangespotUpdateImplement({
+                ...params,
+                fj: fj?.content,
+                implementId: route?.params?.implementid
+              });
+            } else {
+              await fetchChangespotImplement({
+                ...params,
+                fj: fj?.content
+              });
+            }
+
+            setLoading(false);
             navigation.goBack();
           }}
           title="提交执行"
