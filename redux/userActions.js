@@ -30,11 +30,9 @@ export const fetchLogin = params => async dispatch => {
   };
 
   const { data } = await axios(options);
-  // const { data } = await new Promise(resolve =>
-  //   setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
-  // );
+
   return dispatch({
     type: SAVE_USER,
-    payload: data.content.user
+    payload: data?.content?.user || data?.message
   });
 };

@@ -120,7 +120,7 @@ function FeedbackForm(props) {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("需要访问相机胶卷的权限!");
+      Alert.alert("需要访问相机胶卷的权限!");
       return;
     }
 

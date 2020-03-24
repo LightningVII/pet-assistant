@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, AsyncStorage } from "react-native";
+import { AsyncStorage } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
-import { Button, Avatar, Badge, Icon, withBadge } from "react-native-elements";
 import RemoteSensingTaskList from "./screens/RemoteSensingTaskList";
 import RemoteSensingTaskDetail from "./screens/RemoteSensingTaskDetail";
 import FeedbackForm from "./screens/FeedbackForm";
@@ -15,12 +12,10 @@ import { connect } from "react-redux";
 import * as Actions from "./redux/userActions.js";
 
 const Stack = createStackNavigator();
-const BadgedIcon = withBadge()(Icon);
 
 const options = ({ navigation }) => ({
   headerTitle: "我的任务",
-  headerRight: props => (
-    // <AntDesign name={"search1"} size={20} style={{ marginRight: 20 }} />
+  headerRight: () => (
     <AntDesign
       onPress={async () => {
         await AsyncStorage.removeItem("userid");
@@ -33,25 +28,6 @@ const options = ({ navigation }) => ({
       style={{ marginRight: 20 }}
     />
   )
-  /* headerLeft: props => (
-    <BadgedIcon
-      type="antdesign"
-      name="bells"
-      size={20}
-      containerStyle={{ marginLeft: 20 }}
-    />
-    <AntDesign
-      onPress={async () => {
-        await AsyncStorage.removeItem("userid");
-        navigation.canGoBack()
-          ? navigation.goBack()
-          : navigation.navigate("Login");
-      }}
-      name={"logout"}
-      size={20}
-      style={{ marginLeft: 20 }}
-    />
-  ) */
 });
 
 export default connect(
@@ -66,7 +42,7 @@ export default connect(
       const { fetchMe } = props;
       const userid = await AsyncStorage.getItem("userid");
       if (userid) {
-        const user = await fetchMe(userid);
+        await fetchMe(userid);
         setInitialRouteName("RemoteSensingTaskList");
       }
 

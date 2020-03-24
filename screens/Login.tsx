@@ -1,104 +1,110 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, AsyncStorage } from "react-native";
+import React, { useState } from "react";
 import {
-  WhiteSpace,
-  Button,
-  Toast,
-  InputItem,
-  Icon
-} from "@ant-design/react-native";
-import { colors } from "react-native-elements";
+  Alert,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  AsyncStorage
+} from "react-native";
+import { Button, Input } from "react-native-elements";
 import { connect } from "react-redux";
+import { LinearGradient } from "expo-linear-gradient";
 import * as Actions from "../redux/userActions.js";
 
 const image = require("../assets/icon.png");
-
-const UselessTextInputMultiline = ({
-  type = null,
-  value,
-  setValue,
-  icon,
-  placeholder = "有标签"
-}) => {
-  return (
-    <View
-      style={{
-        backgroundColor: "#FFF",
-        borderRadius: 4
-      }}
-    >
-      <InputItem
-        last
-        clear
-        value={value}
-        onChange={val => setValue(val)}
-        placeholder={placeholder}
-        labelNumber={2}
-        type={type}
-      >
-        <Icon name={icon} size="md" color="#CCC" />
-      </InputItem>
-    </View>
-  );
-};
 
 export default connect(
   () => ({}),
   Actions
 )(function(props) {
   const { fetchLogin } = props;
-  const [password, setPassword] = useState();
-  const [username, setUsername] = useState();
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const inputProps = {
+    inputContainerStyle: styles.inputStyle,
+    containerStyle: styles.inputContainer,
+    leftIconContainerStyle: styles.inputLeftIconContainer
+  };
+
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: "center" }}>
-        <Image style={styles.icon} source={image} />
-      </View>
-      <WhiteSpace size="lg" />
-      <WhiteSpace size="lg" />
-      <WhiteSpace size="lg" />
-      <WhiteSpace size="lg" />
-
-      <View
-        style={{
-          padding: 20,
-          margin: 20,
-          borderRadius: 4
-        }}
+      <LinearGradient
+        colors={["#80cbc4", "#4db6ac", "#00897b"]}
+        start={[0.5, 0.2]}
+        end={[0.5, 1]}
+        style={styles.titleContainer}
       >
-        <UselessTextInputMultiline
-          value={username}
-          setValue={setUsername}
-          placeholder="请输入用户名"
-          icon="user"
-        />
-        <WhiteSpace size="lg" />
-        <UselessTextInputMultiline
-          type={"password"}
-          value={password}
-          setValue={setPassword}
-          placeholder="请输入密码"
-          icon="lock"
-        />
-        <WhiteSpace size="lg" />
+        <Text style={styles.title}>桂林执法系统平台</Text>
+      </LinearGradient>
 
-        <Button
-          style={{ borderColor: "#FFF" }}
-          type="primary"
-          onPress={async () => {
-            const { payload } = await fetchLogin({
-              username,
-              password
-            });
-            await AsyncStorage.setItem("userid", payload?.userid);
-            Toast.info("login success");
-            props.navigation.canGoBack()
-              ? props.navigation.goBack()
-              : props.navigation.navigate("RemoteSensingTaskList");
-          }}
-        >
-          登陆
-        </Button>
+      <View style={[styles.container, styles.content]}>
+        <View style={styles.iconContainer}>
+          <Image style={styles.icon} source={image} />
+        </View>
+
+        <View style={styles.wrap}>
+          <Input
+            {...inputProps}
+            placeholder={"请输入用户名"}
+            leftIcon={{
+              size: 20,
+              type: "feather",
+              name: "user",
+              color: "#f2f2f2"
+            }}
+            value={username}
+            onChangeText={v => setUsername(v)}
+            textContentType={"username"}
+          />
+          <Input
+            {...inputProps}
+            textContentType={"password"}
+            secureTextEntry
+            placeholder={"请输入密码"}
+            leftIcon={{
+              size: 20,
+              type: "feather",
+              name: "lock",
+              color: "#f2f2f2"
+            }}
+            value={password}
+            onChangeText={p => setPassword(p)}
+          />
+
+          <Button
+            title={"登 录"}
+            buttonStyle={styles.buttonStyle}
+            linearGradientProps={{
+              colors: ["#80cbc4", "#4db6ac"],
+              start: { x: 0, y: 0.5 },
+              end: { x: 1, y: 0.5 }
+            }}
+            loading={loading}
+            onPress={async () => {
+              setLoading(true);
+              const { payload } = await fetchLogin({
+                username,
+                password
+              });
+
+              if (!payload?.userid) {
+                setLoading(false);
+                Alert.alert(payload);
+                return;
+              }
+
+              await AsyncStorage.setItem("userid", payload?.userid);
+
+              setLoading(false);
+              props.navigation.canGoBack()
+                ? props.navigation.goBack()
+                : props.navigation.navigate("RemoteSensingTaskList");
+            }}
+          />
+        </View>
       </View>
     </View>
   );
@@ -108,11 +114,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#f3f3f3" || colors.primary
+    backgroundColor: "#FFF"
+  },
+  wrap: {
+    flex: 1,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 4,
+    alignItems: "center"
+  },
+  content: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -30
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    borderStyle: "solid",
+    borderColor: "#b2dfdb",
+    marginTop: 60,
+    marginBottom: 40,
+    height: 120,
+    width: 120,
+    borderWidth: 8,
+    borderRadius: 60
   },
   icon: {
-    width: 100,
-    height: 100,
-    borderRadius: 20
-  }
+    width: 60,
+    height: 60
+  },
+  title: {
+    marginTop: 20,
+    fontWeight: "bold",
+    fontSize: 28,
+    color: "#FFF"
+  },
+  buttonStyle: {
+    height: 50,
+    borderRadius: 25,
+    width: 160,
+    margin: 40
+  },
+  titleContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "33%"
+  },
+  inputContainer: {
+    borderWidth: 2,
+    borderRadius: 4,
+    borderColor: "#f2f2f2",
+    marginTop: 20
+  },
+  inputStyle: {
+    borderBottomWidth: 0,
+    marginTop: 4,
+    marginBottom: 4
+  },
+  inputLeftIconContainer: { marginLeft: 2, marginRight: 6 }
 });
