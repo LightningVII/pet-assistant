@@ -1,45 +1,38 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  FlatList,
-  RefreshControl,
-  SafeAreaView
-} from "react-native";
+import { View, FlatList, RefreshControl, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
+import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
 import { SearchBar, ListItem, colors } from "react-native-elements";
-
 
 function RemoteSensingTaskList(props) {
   const { navigation, fetchChangespotList, remoteSensing, user } = props;
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [pageNum, setPageNum] = useState(1);
+  const [loading, setLoading] = useState(false);
   const { remoteSensingList: list } = remoteSensing || {};
+  const { userid } = user?.user;
+
+  const fetchParams = {
+    userid,
+    pageNum,
+    pageSize: 200,
+    term: search
+  };
 
   useEffect(() => {
-    fetchChangespotList({
-      userid: user?.user?.userid,
-      pageNum,
-      pageSize: 200,
-      term: search
-    });
-  }, []);
+    setLoading(true);
+    fetchChangespotList(fetchParams).then(() => setLoading(false));
+  }, [userid]);
 
   const updateSearch = search => setSearch(search);
 
   const _onRefresh = () => {
     setRefreshing(true);
     // setPageNum(pageNum + 1);
-    fetchChangespotList({
-      userid: user?.user?.userid,
-      pageNum: pageNum,
-      pageSize: 200,
-      term: search
-    }).then(() => setRefreshing(false));
+    fetchChangespotList(fetchParams).then(() => setRefreshing(false));
   };
-
-  const keyExtractor = (item, index) => index.toString();
 
   const renderItem = ({ item }) => (
     <ListItem
@@ -55,7 +48,10 @@ function RemoteSensingTaskList(props) {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.grey5 }}>
+    <SafeAreaViewLoading
+      loading={loading}
+      style={{ flex: 1, backgroundColor: colors.grey5 }}
+    >
       <View style={{ flex: 1 }}>
         {/* <Text>{remoteSensing?.batchList?.data?.title}</Text> */}
         <SearchBar
@@ -65,25 +61,19 @@ function RemoteSensingTaskList(props) {
           value={search}
           onBlur={() => {
             setPageNum(1);
-            fetchChangespotList({
-              userid: user?.user?.userid,
-              pageNum: 1,
-              pageSize: 200,
-              term: search
-            });
+            fetchChangespotList(fetchParams);
           }}
         />
         <FlatList
-          keyExtractor={keyExtractor}
+          keyExtractor={({ spotid }) => spotid}
           data={list}
           renderItem={renderItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
           }
         />
-        {/* <Button onPress={() => navigation.goBack()} title="Go back home" /> */}
       </View>
-    </SafeAreaView>
+    </SafeAreaViewLoading>
   );
 }
 

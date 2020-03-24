@@ -55,11 +55,11 @@ function FeedbackForm(props) {
   const [selectedImages, setSelectedImages] = useState([]);
   const [cameraImages, setCameraImages] = useState([]);
   const [oriImages, setOriImages] = useState([]);
-  const [content, setContent] = useState();
-  const [remark, setRemark] = useState();
+  const [content, setContent] = useState('');
+  const [remark, setRemark] = useState('');
   const { showActionSheetWithOptions } = useActionSheet();
   const [isVisible, setIsVisible] = useState(false);
-  const [source, setSource] = useState();
+  const [source, setSource] = useState(null);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
@@ -140,7 +140,6 @@ function FeedbackForm(props) {
         cancelButtonIndex: 2
       },
       buttonIndex => {
-        console.log("object --------:", BUTTONS[buttonIndex]);
         actions[buttonIndex]();
       }
     );
@@ -163,11 +162,9 @@ function FeedbackForm(props) {
         <Input
           value={remark}
           onChange={e => setRemark(e?.nativeEvent?.text)}
-          // ref={component => (this._textInput = component)}
           containerStyle={styles.input}
           inputContainerStyle={{ borderBottomWidth: 0 }}
           label={"备注"}
-          // placeholder="填写执行信息"
           multiline
         />
 
@@ -226,7 +223,7 @@ function FeedbackForm(props) {
                 key={image.id}
                 onPress={() => {
                   setIsVisible(true);
-                  setSource({ uri: image.localUri });
+                  setSource({ uri: image?.localUri });
                 }}
               >
                 <Image
