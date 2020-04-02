@@ -20,8 +20,8 @@ const App = props => {
   useEffect(() => {
     (async function() {
       await Font.loadAsync({
-        antoutline: require("@ant-design/icons-react-native/fonts/antoutline.ttf"),
-        antfill: require("@ant-design/icons-react-native/fonts/antfill.ttf")
+        antoutline: require("./assets/fonts/antoutline.ttf"),
+        antfill: require("./assets/fonts/antfill.ttf")
       });
       setIsReady(true);
     })();
