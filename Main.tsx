@@ -2,40 +2,25 @@ import React, { useState, useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AntDesign } from "@expo/vector-icons";
-import RemoteSensingTaskList from "./screens/RemoteSensingTaskList";
+import Home from "./screens/Home";
 import RemoteSensingTaskDetail from "./screens/RemoteSensingTaskDetail";
 import FeedbackForm from "./screens/FeedbackForm";
 import ImagesPicker from "./screens/ImagesPicker";
+import MyMessages from "./screens/MyMessages";
+import MyTasks from "./screens/MyTasks";
+import TasksMap from "./screens/TasksMap";
 import Login from "./screens/Login";
 import { connect } from "react-redux";
 import * as Actions from "./redux/userActions.js";
 
-const Stack = createStackNavigator();
-
-const options = ({ navigation }) => ({
-  headerTitle: "我的任务",
-  headerRight: () => (
-    <AntDesign
-      onPress={async () => {
-        await AsyncStorage.removeItem("userid");
-        navigation.canGoBack()
-          ? navigation.goBack()
-          : navigation.navigate("Login");
-      }}
-      name={"logout"}
-      size={20}
-      style={{ marginRight: 20 }}
-    />
-  )
-});
+const { Navigator, Screen } = createStackNavigator();
 
 export default connect(
   () => ({}),
   Actions
 )(props => {
   const [isReady, setIsReady] = useState(false);
-  const [initialRouteName, setInitialRouteName] = useState("Login");
+  const [initialRouteName, setInitialRouteName] = useState("Home");
 
   useEffect(() => {
     (async function() {
@@ -43,34 +28,45 @@ export default connect(
       const userid = await AsyncStorage.getItem("userid");
       if (userid) {
         await fetchMe(userid);
-        setInitialRouteName("RemoteSensingTaskList");
+        setInitialRouteName("Home");
       }
 
       setIsReady(true);
     })();
   }, []);
-  if (!isReady) return null;
+  // if (!isReady) return null;
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={initialRouteName}>
-        <Stack.Screen
-          name="RemoteSensingTaskList"
-          options={options}
-          component={RemoteSensingTaskList}
-        />
-        <Stack.Screen
+      <Navigator initialRouteName={initialRouteName}>
+        <Screen name="Home" component={Home} />
+        <Screen
           name="RemoteSensingTaskDetail"
           component={RemoteSensingTaskDetail}
         />
-        <Stack.Screen name="FeedbackForm" component={FeedbackForm} />
-        <Stack.Screen name="ImagesPicker" component={ImagesPicker} />
-        <Stack.Screen
+        <Screen name="FeedbackForm" component={FeedbackForm} />
+        <Screen name="ImagesPicker" component={ImagesPicker} />
+        <Screen
+          name="MyMessages"
+          options={{ title: "我的消息" }}
+          component={MyMessages}
+        />
+        <Screen
+          name="MyTasks"
+          options={{ title: "我的任务" }}
+          component={MyTasks}
+        />
+        <Screen
+          name="TasksMap"
+          options={{ title: "任务地图" }}
+          component={TasksMap}
+        />
+        <Screen
           name="Login"
           options={{ headerShown: false }}
           component={Login}
         />
-      </Stack.Navigator>
+      </Navigator>
     </NavigationContainer>
   );
 });

@@ -13,11 +13,19 @@ const getOptions = url => ({
 
 export const fetchChangespotList = payload => async dispatch => {
   const options = getOptions("/changespot/list?" + stringify(payload));
-  const { data } = await axios(options);
-  return dispatch({
-    type: REMOTE_SENSING_LIST,
-    payload: data
-  });
+  try {
+    const { data } = await axios(options);
+
+    return dispatch({
+      type: REMOTE_SENSING_LIST,
+      payload: data
+    });
+  } catch (error) {
+    return dispatch({
+      type: "error",
+      error
+    });
+  }
 };
 
 export const fetchChangespotInfo = payload => async dispatch => {
@@ -40,7 +48,7 @@ export const fetchChangespotImplementInfo = payload => async dispatch => {
 };
 
 export const fetchChangespotUpdateImplement = payload => async dispatch => {
-  console.log('fetchChangespotUpdateImplement', payload)
+  console.log("fetchChangespotUpdateImplement", payload);
   const options = {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -91,7 +99,7 @@ export const fetchChangespotUpload = (
       throw error;
     });
 
-  console.log('fetchChangespotUpload', data)
+  console.log("fetchChangespotUpload", data);
 
   return data;
 };

@@ -14,6 +14,13 @@ import * as Actions from "../redux/userActions.js";
 
 const image = require("../assets/icon.png");
 
+const icon = {
+  size: 20,
+  type: "feather",
+  color: "#f2f2f2"
+};
+const title = "桂林执法系统平台";
+
 export default connect(
   () => ({}),
   Actions
@@ -22,6 +29,9 @@ export default connect(
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const setU = v => setUsername(v);
+  const setP = v => setPassword(v);
 
   const inputProps = {
     inputContainerStyle: styles.inputStyle,
@@ -37,7 +47,7 @@ export default connect(
         end={[0.5, 1]}
         style={styles.titleContainer}
       >
-        <Text style={styles.title}>桂林执法系统平台</Text>
+        <Text style={styles.title}>{title}</Text>
       </LinearGradient>
 
       <View style={[styles.container, styles.content]}>
@@ -48,30 +58,20 @@ export default connect(
         <View style={styles.wrap}>
           <Input
             {...inputProps}
-            placeholder={"请输入用户名"}
-            leftIcon={{
-              size: 20,
-              type: "feather",
-              name: "user",
-              color: "#f2f2f2"
-            }}
-            value={username}
-            onChangeText={v => setUsername(v)}
             textContentType={"username"}
+            placeholder={"请输入用户名"}
+            leftIcon={{ ...icon, name: "user" }}
+            value={username}
+            onChangeText={setU}
           />
           <Input
             {...inputProps}
             textContentType={"password"}
-            secureTextEntry
             placeholder={"请输入密码"}
-            leftIcon={{
-              size: 20,
-              type: "feather",
-              name: "lock",
-              color: "#f2f2f2"
-            }}
+            leftIcon={{ ...icon, name: "lock" }}
             value={password}
-            onChangeText={p => setPassword(p)}
+            onChangeText={setP}
+            secureTextEntry
           />
 
           <Button
@@ -101,7 +101,7 @@ export default connect(
               setLoading(false);
               props.navigation.canGoBack()
                 ? props.navigation.goBack()
-                : props.navigation.navigate("RemoteSensingTaskList");
+                : props.navigation.navigate("Home");
             }}
           />
         </View>

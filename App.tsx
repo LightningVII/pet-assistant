@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { ThemeProvider } from "react-native-elements";
-import HomeApp from "./HomeApp";
+import Main from "./Main";
 import Store from "./redux/Store";
 import * as Font from "expo-font";
 
@@ -31,7 +31,7 @@ const App = props => {
   return (
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
-        <HomeApp {...props} />
+        <Main {...props} />
       </ThemeProvider>
     </ReduxProvider>
   );
