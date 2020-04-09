@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import MapView from "react-native-maps";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 
@@ -29,3 +29,25 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height
   }
 });
+
+
+ */
+import React from 'react';
+import { WebView } from 'react-native-webview';
+
+const html = { uri: 'file:///com.otitan.guilin/android/app/src/main/assets/index.html' }
+
+// require('../assets/index.html');
+
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <WebView
+        originWhitelist={['*']}
+        source={html}
+        style={{ marginTop: 120 }}
+      />
+    );
+  }
+}
