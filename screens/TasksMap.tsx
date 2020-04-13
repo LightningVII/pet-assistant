@@ -32,22 +32,31 @@ const styles = StyleSheet.create({
 
 
  */
-import React from 'react';
-import { WebView } from 'react-native-webview';
+import React, { useEffect, useState } from "react";
+import { WebView } from "react-native-webview";
+import { Asset } from "expo-asset";
+const html = require("../assets/index.html");
 
-const html = { uri: 'file:///com.otitan.guilin/android/app/src/main/assets/index.html' }
+const TasksMap = () => {
+  const [uri, setUri] = useState("");
 
-// require('../assets/index.html');
+  useEffect(() => {
+    (async function () {
+      await Asset.loadAsync(html);
+      setUri(Asset.fromModule(html).localUri);
+    })();
+  }, []);
 
+  return (
+    <WebView
+      originWhitelist={["*"]}
+      allowFileAccess={true}
+      source={{ uri }}
+      domStorageEnabled={true}
+      allowUniversalAccessFromFileURLs={true}
+      allowFileAccessFromFileURLs={true}
+    />
+  );
+};
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <WebView
-        originWhitelist={['*']}
-        source={html}
-        style={{ marginTop: 120 }}
-      />
-    );
-  }
-}
+export default TasksMap;

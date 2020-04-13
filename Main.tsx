@@ -39,7 +39,7 @@ export default connect(
   return (
     <NavigationContainer>
       <Navigator initialRouteName={initialRouteName}>
-        <Screen name="Home" component={Home} />
+        <Screen name="Home" component={Home} options={{ headerShown: false }} />
         <Screen
           name="RemoteSensingTaskDetail"
           component={RemoteSensingTaskDetail}

@@ -6,19 +6,19 @@ import {
   Alert,
   AsyncStorage,
   Text,
-  Button,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
 import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
-import { SearchBar, ListItem, colors } from "react-native-elements";
+import { Button, ListItem, colors } from "react-native-elements";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import moment from "moment";
 
 const { width } = Dimensions.get("window");
 
 function Home(props) {
-  const { navigation, fetchChangespotList, remoteSensing, user } = props;
+  const { navigation, route, fetchChangespotList, remoteSensing, user } = props;
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [pageNum, setPageNum] = useState(1);
@@ -30,7 +30,7 @@ function Home(props) {
     userid,
     pageNum,
     pageSize: 200,
-    term: search
+    term: search,
   };
 
   /* useEffect(() => {
@@ -42,7 +42,7 @@ function Home(props) {
     });
   }, [userid]); */
 
-  const updateSearch = search => setSearch(search);
+  console.log('route :', route.name);
 
   const _onRefresh = () => {
     setRefreshing(true);
@@ -55,9 +55,23 @@ function Home(props) {
       onPress={() => navigation.navigate("RemoteSensingTaskDetail", item)}
       title={item.county}
       subtitle={item.location}
-      leftAvatar={{
-        title: item.qsxbhdl
+      leftIcon={{
+        type: "feather",
+        name: "x-circle",
+        color: "#e53935"
       }}
+      /* {
+        type: "feather",
+        name: "check-circle",
+        color: "#43a047"
+      } */
+      /* rightAvatar={
+        <Button
+          onPress={() => navigation.navigate("RemoteSensingTaskDetail", item)}
+          title="查看"
+          titleStyle={{ fontSize: 12 }}
+        />
+      } */
       bottomDivider
       chevron
     />
@@ -69,20 +83,16 @@ function Home(props) {
       style={{ flex: 1, backgroundColor: colors.grey5 }}
     >
       <View style={{ flex: 1 }}>
-        <SearchBar
-          placeholder="查询..."
-          lightTheme={true}
-          onChangeText={updateSearch}
-          value={search}
-          onBlur={() => {
-            setPageNum(1);
-            fetchChangespotList(fetchParams);
-          }}
-        />
-
         <FlatList
           keyExtractor={({ spotid }) => spotid}
-          data={list}
+          data={[
+            {
+              county: "徐州",
+              location: moment().format("MM-DD hh:mm"),
+              spotid: "aa",
+              qsxbhdl: "絮絮",
+            },
+          ]} // list
           renderItem={renderItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />

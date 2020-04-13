@@ -8,11 +8,11 @@ import {
   Text,
   Button,
   TouchableWithoutFeedback,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import { SearchBar, ListItem, colors } from "react-native-elements";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import { SearchBar, ListItem, colors, Image } from "react-native-elements";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import RemoteSensingTaskList from "./RemoteSensingTaskList";
 import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
@@ -20,69 +20,52 @@ import * as Actions from "../redux/remoteSensingActions.js";
 
 const { width } = Dimensions.get("window");
 
-const Tab = createMaterialTopTabNavigator();
-
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+const { Navigator, Screen } = createMaterialTopTabNavigator();
 
 function MyTabs() {
   return (
-    <Tab.Navigator
+    <Navigator
       tabBarOptions={{
         labelStyle: { fontSize: 16 },
-        tabStyle: { width: "auto" }
+        tabStyle: { width: "auto" },
       }}
     >
-      <Tab.Screen
-        name="Home"
+      <Screen
+        name="TasksOngoing"
         options={{ title: "正在进行" }}
         component={RemoteSensingTaskList}
       />
-      <Tab.Screen
-        name="Settings"
+      <Screen
+        name="TasksClosed"
         options={{ title: "已关闭" }}
-        component={SettingsScreen}
+        component={RemoteSensingTaskList}
       />
-    </Tab.Navigator>
+    </Navigator>
   );
 }
 
-const CirleIcon = ({
+const TabItem = ({
   children,
   text = "",
   size = null,
-  handlePress = () => console.log("2323 :", 2323)
+  handlePress = () => console.log("2323 :", 2323),
 }) => (
   <TouchableWithoutFeedback onPress={handlePress}>
-    <View>
-      <View
-        style={{
-          width: size || width / 6,
-          height: size || width / 6,
-          borderColor: colors.primary,
-          borderWidth: 2,
-          backgroundColor: "white",
-          borderRadius: size / 2 || width / 12,
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center"
-        }}
-      >
-        {children}
-      </View>
+    <View
+      style={{
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {children}
       {text ? (
         <Text
           style={{
-            color: colors.primary,
+            color: "white",
             textAlign: "center",
             fontSize: 16,
-            marginTop: 8
+            marginTop: 8,
           }}
         >
           {text}
@@ -101,39 +84,6 @@ function Home(props) {
   const { remoteSensingList: list } = remoteSensing || {};
   const { userid, username } = user?.user || {};
 
-  navigation.setOptions({
-    headerTitle: "桂林执法",
-    headerLeft: () => (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <AntDesign
-          onPress={async () => {
-            await AsyncStorage.removeItem("userid");
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.navigate("Login");
-          }}
-          name={"user"}
-          size={20}
-          style={{ marginLeft: 20 }}
-        />
-        <Text>{username || "用户名"}</Text>
-      </View>
-    ),
-    headerRight: () => (
-      <AntDesign
-        onPress={async () => {
-          await AsyncStorage.removeItem("userid");
-          navigation.canGoBack()
-            ? navigation.goBack()
-            : navigation.navigate("Login");
-        }}
-        name={"logout"}
-        size={20}
-        style={{ marginRight: 20 }}
-      />
-    )
-  });
-
   return (
     <SafeAreaViewLoading
       loading={loading}
@@ -142,50 +92,96 @@ function Home(props) {
       <View
         style={{
           flexDirection: "row",
-          alignSelf: "center",
-          alignItems: "center",
-          backgroundColor: "white",
-          paddingTop: 30,
-          paddingBottom: 30,
-          paddingLeft: 40,
-          width: "100%"
+          justifyContent: "space-between",
+          backgroundColor: "#1976d2", // colors.primary,// "#00897b", // "#1e88e5"
+          paddingTop: 20,
+          paddingBottom: 20,
+          paddingLeft: 20,
+          width: "100%",
         }}
       >
-        <CirleIcon size={60}>
-          <AntDesign name={"user"} size={40} color={colors.primary} />
-        </CirleIcon>
-        <Text style={{ marginLeft: 20, fontSize: 20, color: colors.primary }}>
-          {username || "用户名"}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          {/* <CircleIcon size={40}>
+            <AntDesign name={"user"} size={20} color={"white"} />
+          </CircleIcon> */}
+          <Image
+            style={{ width: 50, height: 50 }}
+            source={require("../assets/static/id-card.png")}
+          />
+          <View
+            style={{
+              marginLeft: 20,
+              justifyContent: "space-between",
+              height: 40,
+            }}
+          >
+            <Text style={{ fontSize: 16, color: "white" }}>
+              {username || "用户名"}
+            </Text>
+            <Text style={{ fontSize: 16, color: "white" }}>
+              {"第一大队大队长"}
+            </Text>
+          </View>
+        </View>
+
+        <FontAwesome
+          onPress={async () => {
+            await AsyncStorage.removeItem("userid");
+            navigation.canGoBack()
+              ? navigation.goBack()
+              : navigation.navigate("Login");
+          }}
+          name={"power-off"}
+          size={20}
+          style={{ marginRight: 20, color: "white" }}
+        />
       </View>
       <View
         style={{
-          backgroundColor: "white",
           flexDirection: "row",
           justifyContent: "space-around",
-          paddingBottom: 20
+          backgroundColor: "#fb8c00",
+          // backgroundColor: "#039be5", // "#4db6ac"
+          paddingTop: 20,
+          paddingBottom: 20,
         }}
       >
-        <CirleIcon
+        <TabItem
           handlePress={() => navigation.navigate("MyMessages")}
           text={"我的消息"}
         >
-          <AntDesign name={"message1"} size={30} color={colors.primary} />
-        </CirleIcon>
-        <CirleIcon
+          <Image
+            style={{ width: 60, height: 60 }}
+            source={require("../assets/static/email.png")}
+          />
+          {/* <AntDesign name={"message1"} size={24} color={"white"} /> */}
+        </TabItem>
+        <TabItem
           handlePress={() => navigation.navigate("MyTasks")}
           text={"我的任务"}
         >
-          <FontAwesome5 name={"tasks"} size={30} color={colors.primary} />
-        </CirleIcon>
-        <CirleIcon
+          <Image
+            style={{ width: 60, height: 60 }}
+            source={require("../assets/static/checklist.png")}
+          />
+          {/* <FontAwesome5 name={"tasks"} size={24} color={"white"} /> */}
+        </TabItem>
+        <TabItem
           handlePress={() => navigation.navigate("TasksMap")}
           text={"任务地图"}
         >
-          <FontAwesome5 name={"map"} size={30} color={colors.primary} />
-        </CirleIcon>
+          <Image
+            style={{ width: 60, height: 60 }}
+            source={require("../assets/static/radar.png")}
+          />
+          {/* <FontAwesome5 name={"map"} size={24} color={"white"} /> */}
+        </TabItem>
       </View>
-
       <MyTabs />
     </SafeAreaViewLoading>
   );
