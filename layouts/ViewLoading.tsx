@@ -1,10 +1,9 @@
 import React from "react";
 import { View, ActivityIndicator, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Overlay } from "react-native-elements";
 
-const SafeAreaViewLoading = ({ children, loading = false, ...other }) => (
-  <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }} {...other}>
+const ViewLoading = ({ children, loading = false, ...other }) => (
+  <View style={{ flex: 1, backgroundColor: "#FFF" }} {...other}>
     <Overlay
       height={"auto"}
       width={"auto"}
@@ -17,7 +16,7 @@ const SafeAreaViewLoading = ({ children, loading = false, ...other }) => (
       </View>
     </Overlay>
     {children}
-  </SafeAreaView>
+  </View>
 );
 
-export default SafeAreaViewLoading;
+export default ViewLoading;

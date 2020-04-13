@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
+import ViewLoading from "../layouts/ViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
 import {
   Button,
@@ -66,13 +66,13 @@ function Home(props) {
           徐州徐州徐州徐州徐州徐州徐州徐州
         </Text>
       }
-      rightElement={item.location}
+      rightElement={<Text>{item.location}</Text>}
       bottomDivider
     />
   );
 
   return (
-    <SafeAreaViewLoading
+    <ViewLoading
       loading={loading}
       style={{ flex: 1, backgroundColor: colors.grey5 }}
     >
@@ -83,7 +83,7 @@ function Home(props) {
             {
               county: "徐州",
               location: moment().format("MM-DD hh:mm"),
-              spotid: 1,
+              spotid: "a",
               qsxbhdl: "絮絮",
             },
           ]} // list
@@ -97,11 +97,10 @@ function Home(props) {
         fullScreen
         isVisible={overlayStatus}
         overlayStyle={{ padding: 0 }}
-        // onBackdropPress={() => this.setState({ isVisible: false })}
+        // onBackdropPress={() => setOverlayStatus(false)}
       >
         <View>
-          <Header
-            statusBarProps={{ barStyle: "dark-content" }}
+          {/* <Header
             rightComponent={{
               icon: "close",
               color: "black",
@@ -112,11 +111,12 @@ function Home(props) {
               backgroundColor: "white",
               justifyContent: "space-around",
             }}
-          />
+          /> */}
+          <Button title={'asd'} onPress={() => setOverlayStatus(false)} />
           <Text style={{ padding: 20 }}>Hello from Overlay!</Text>
         </View>
       </Overlay>
-    </SafeAreaViewLoading>
+    </ViewLoading>
   );
 }
 

@@ -4,10 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./screens/Home";
 import RemoteSensingTaskDetail from "./screens/RemoteSensingTaskDetail";
+import RemoteSensingTaskList from "./screens/RemoteSensingTaskList";
 import FeedbackForm from "./screens/FeedbackForm";
 import ImagesPicker from "./screens/ImagesPicker";
 import MyMessages from "./screens/MyMessages";
-import MyTasks from "./screens/MyTasks";
 import TasksMap from "./screens/TasksMap";
 import Login from "./screens/Login";
 import { connect } from "react-redux";
@@ -52,9 +52,9 @@ export default connect(
           component={MyMessages}
         />
         <Screen
-          name="MyTasks"
+          name="RemoteSensingTaskList"
           options={{ title: "我的任务" }}
-          component={MyTasks}
+          component={RemoteSensingTaskList}
         />
         <Screen
           name="TasksMap"

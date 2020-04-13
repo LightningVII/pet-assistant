@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { ThemeProvider } from "react-native-elements";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import Main from "./Main";
 import Store from "./redux/Store";
 import * as Font from "expo-font";
 
 import {
   ActionSheetProvider,
-  connectActionSheet
+  connectActionSheet,
 } from "@expo/react-native-action-sheet";
 
 const theme = {
-  colors: {}
+  colors: {},
 };
 
-const App = props => {
+const App = (props) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       await Font.loadAsync({
         antoutline: require("./assets/fonts/antoutline.ttf"),
-        antfill: require("./assets/fonts/antfill.ttf")
+        antfill: require("./assets/fonts/antfill.ttf"),
       });
       setIsReady(true);
     })();
@@ -31,7 +32,9 @@ const App = props => {
   return (
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
-        <Main {...props} />
+        <SafeAreaProvider>
+          <Main {...props} />
+        </SafeAreaProvider>
       </ThemeProvider>
     </ReduxProvider>
   );

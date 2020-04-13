@@ -64,7 +64,7 @@ const TabItem = ({
           style={{
             color: "white",
             textAlign: "center",
-            fontSize: 16,
+            fontSize: 14,
             marginTop: 8,
           }}
         >
@@ -93,10 +93,13 @@ function Home(props) {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          backgroundColor: "#1976d2", // colors.primary,// "#00897b", // "#1e88e5"
-          paddingTop: 20,
-          paddingBottom: 20,
+          alignSelf: "center",
+          alignItems: "center",
+          backgroundColor: "#212121", // colors.primary,// "#00897b", // "#1e88e5"
+          paddingTop: 15,
+          paddingBottom: 15,
           paddingLeft: 20,
+          // marginTop: 22,
           width: "100%",
         }}
       >
@@ -110,20 +113,20 @@ function Home(props) {
             <AntDesign name={"user"} size={20} color={"white"} />
           </CircleIcon> */}
           <Image
-            style={{ width: 50, height: 50 }}
+            style={{ width: 40, height: 40 }}
             source={require("../assets/static/id-card.png")}
           />
           <View
             style={{
-              marginLeft: 20,
-              justifyContent: "space-between",
+              marginLeft: 15,
+              justifyContent: "space-around",
               height: 40,
             }}
           >
-            <Text style={{ fontSize: 16, color: "white" }}>
+            <Text style={{ fontSize: 14, color: "white" }}>
               {username || "用户名"}
             </Text>
-            <Text style={{ fontSize: 16, color: "white" }}>
+            <Text style={{ fontSize: 12, color: "white" }}>
               {"第一大队大队长"}
             </Text>
           </View>
@@ -145,7 +148,7 @@ function Home(props) {
         style={{
           flexDirection: "row",
           justifyContent: "space-around",
-          backgroundColor: "#fb8c00",
+          backgroundColor: "#7cb342",
           // backgroundColor: "#039be5", // "#4db6ac"
           paddingTop: 20,
           paddingBottom: 20,
@@ -156,17 +159,17 @@ function Home(props) {
           text={"我的消息"}
         >
           <Image
-            style={{ width: 60, height: 60 }}
+            style={{ width: 50, height: 50 }}
             source={require("../assets/static/email.png")}
           />
           {/* <AntDesign name={"message1"} size={24} color={"white"} /> */}
         </TabItem>
         <TabItem
-          handlePress={() => navigation.navigate("MyTasks")}
+          handlePress={() => navigation.navigate("RemoteSensingTaskList")}
           text={"我的任务"}
         >
           <Image
-            style={{ width: 60, height: 60 }}
+            style={{ width: 50, height: 50 }}
             source={require("../assets/static/checklist.png")}
           />
           {/* <FontAwesome5 name={"tasks"} size={24} color={"white"} /> */}
@@ -176,7 +179,7 @@ function Home(props) {
           text={"任务地图"}
         >
           <Image
-            style={{ width: 60, height: 60 }}
+            style={{ width: 50, height: 50 }}
             source={require("../assets/static/radar.png")}
           />
           {/* <FontAwesome5 name={"map"} size={24} color={"white"} /> */}

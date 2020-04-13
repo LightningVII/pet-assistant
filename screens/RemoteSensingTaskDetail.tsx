@@ -6,8 +6,8 @@ import {
   Text,
   Image,
   RefreshControl,
-  SafeAreaView
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, ListItem, Button, colors } from "react-native-elements";
 import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
@@ -19,15 +19,15 @@ const STATUS = ["接收任务", "任务下发", "执行", "关闭"];
 const styles = {
   subtitleStyle: { color: colors.grey2, marginTop: 5 },
   image: {},
-  name: {}
+  name: {},
 };
 
-const Item = props => (
+const Item = (props) => (
   <ListItem
     titleStyle={{
       fontSize: 14,
       color: colors.grey2,
-      marginBottom: 10
+      marginBottom: 10,
     }}
     subtitleStyle={{ fontSize: 18 }}
     bottomDivider
@@ -56,7 +56,7 @@ export default connect(
     qsxbhdl,
     hsxbhdl,
     qsxdlmc,
-    hsxdlmc
+    hsxdlmc,
   } = changespot || {};
 
   useEffect(() => {
@@ -70,8 +70,8 @@ export default connect(
   navigation.setOptions({
     headerTitle: batch,
     headerTitleContainerStyle: {
-      width: 200
-    }
+      width: 200,
+    },
   });
 
   const [refreshing, setRefreshing] = useState(false);
@@ -108,7 +108,7 @@ export default connect(
         </Card>
 
         <View style={{ marginTop: 20 }}>
-          {spotImplements?.map(item => {
+          {spotImplements?.map((item) => {
             const {
               fjs,
               czry,
@@ -116,7 +116,7 @@ export default connect(
               czyj,
               remark,
               zxstate,
-              implementid
+              implementid,
             } = item;
             const rightIcon = () => {
               if (zxstate !== 2) return null;
@@ -129,8 +129,8 @@ export default connect(
                   navigation.navigate("FeedbackForm", {
                     type: "update",
                     tbbm,
-                    ...item
-                  })
+                    ...item,
+                  }),
               };
             };
             return (
@@ -143,7 +143,7 @@ export default connect(
                   leftAvatar={
                     <Text
                       style={{
-                        color: [colors.grey0, colors.success, "red"][zxstate]
+                        color: [colors.grey0, colors.success, "red"][zxstate],
                       }}
                     >
                       {["未审批", "已通过", "未通过"][zxstate]}
@@ -156,14 +156,14 @@ export default connect(
                     flexDirection: "row",
                     backgroundColor: "#FFF",
                     padding: 15,
-                    paddingTop: 0
+                    paddingTop: 0,
                   }}
                 >
                   <View style={{ flex: 1 }}>
                     <Text
                       style={{
                         lineHeight: 25,
-                        paddingTop: 0
+                        paddingTop: 0,
                       }}
                     >
                       {czyj}
@@ -171,7 +171,7 @@ export default connect(
                     <Text
                       style={{
                         lineHeight: 25,
-                        paddingTop: 10
+                        paddingTop: 10,
                       }}
                     >
                       {remark}
@@ -180,13 +180,13 @@ export default connect(
                   {fjs?.length ? (
                     <Image
                       source={{
-                        uri: fjs[0]
+                        uri: fjs[0],
                       }}
                       style={{
                         marginLeft: 15,
                         width: width * 0.3,
                         height: width * 0.3,
-                        borderRadius: 15
+                        borderRadius: 15,
                       }}
                     />
                   ) : null}

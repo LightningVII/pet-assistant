@@ -20,7 +20,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import { connect } from "react-redux";
 import PicturePreview from "../components/PicturePreview";
-import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
+import ViewLoading from "../layouts/ViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
 
 const styles = {
@@ -146,7 +146,7 @@ function FeedbackForm(props) {
   };
 
   return (
-    <SafeAreaViewLoading loading={loading}>
+    <ViewLoading loading={loading}>
       <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
         <Input
           value={content}
@@ -303,7 +303,7 @@ function FeedbackForm(props) {
           title="提交执行"
         />
       </View>
-    </SafeAreaViewLoading>
+    </ViewLoading>
   );
 }
 

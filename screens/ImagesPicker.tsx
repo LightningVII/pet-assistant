@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, colors } from "react-native-elements";
 import ImageBrowser from "../components/ImageBrowser";
 import { AntDesign } from "@expo/vector-icons";

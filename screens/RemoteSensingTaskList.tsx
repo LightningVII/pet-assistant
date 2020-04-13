@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
+import ViewLoading from "../layouts/ViewLoading";
 import * as Actions from "../redux/remoteSensingActions.js";
 import { Button, ListItem, colors } from "react-native-elements";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
@@ -42,7 +42,7 @@ function Home(props) {
     });
   }, [userid]); */
 
-  console.log('route :', route.name);
+  console.log("route :", route.name);
 
   const _onRefresh = () => {
     setRefreshing(true);
@@ -58,7 +58,7 @@ function Home(props) {
       leftIcon={{
         type: "feather",
         name: "x-circle",
-        color: "#e53935"
+        color: "#e53935",
       }}
       /* {
         type: "feather",
@@ -78,7 +78,7 @@ function Home(props) {
   );
 
   return (
-    <SafeAreaViewLoading
+    <ViewLoading
       loading={loading}
       style={{ flex: 1, backgroundColor: colors.grey5 }}
     >
@@ -99,7 +99,7 @@ function Home(props) {
           }
         />
       </View>
-    </SafeAreaViewLoading>
+    </ViewLoading>
   );
 }
 
