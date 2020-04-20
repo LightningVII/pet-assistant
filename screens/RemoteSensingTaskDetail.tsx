@@ -7,7 +7,6 @@ import {
   Image,
   RefreshControl,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, ListItem, Button, colors } from "react-native-elements";
 import { connect } from "react-redux";
 import * as Actions from "../redux/remoteSensingActions.js";
@@ -83,7 +82,7 @@ export default connect(
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView style={{ flex: 1, backgroundColor: colors.grey5 }}>
         <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
         <Card
@@ -205,6 +204,6 @@ export default connect(
           />
         </View>
       ) : null}
-    </SafeAreaView>
+    </View>
   );
 });

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, user-scalable=no, width=device-width"
+    />
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #container {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=c5125441ee763f7ebcc1055f34ebbf14"></script>
+    <script type="text/javascript">
+      var map = new AMap.Map("container", {
+        // center: [117.000923, 36.675807],
+        zoom: 11,
+      });
+    </script>
+  </body>
+</html>

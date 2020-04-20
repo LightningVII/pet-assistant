@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Children } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   FlatList,
@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   Text,
   Dimensions,
+  Platform,
 } from "react-native";
 import { connect } from "react-redux";
 import ViewLoading from "../layouts/ViewLoading";
@@ -100,7 +101,7 @@ function Home(props) {
         // onBackdropPress={() => setOverlayStatus(false)}
       >
         <View>
-          {/* <Header
+          <Header
             rightComponent={{
               icon: "close",
               color: "black",
@@ -110,9 +111,10 @@ function Home(props) {
             containerStyle={{
               backgroundColor: "white",
               justifyContent: "space-around",
+              marginTop: Platform.OS === "ios" ? 0 : -22,
             }}
-          /> */}
-          <Button title={'asd'} onPress={() => setOverlayStatus(false)} />
+          />
+          {/* <Button title={'asd'} onPress={() => setOverlayStatus(false)} /> */}
           <Text style={{ padding: 20 }}>Hello from Overlay!</Text>
         </View>
       </Overlay>

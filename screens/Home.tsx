@@ -148,8 +148,7 @@ function Home(props) {
         style={{
           flexDirection: "row",
           justifyContent: "space-around",
-          backgroundColor: "#7cb342",
-          // backgroundColor: "#039be5", // "#4db6ac"
+          backgroundColor: colors.primary,
           paddingTop: 20,
           paddingBottom: 20,
         }}
