@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text } from "react-native";
+import { connect } from "react-redux";
+import * as Actions from "../redux/mapActions.js";
 import { Button, ButtonGroup, colors } from "react-native-elements";
 import { WebView } from "react-native-webview";
 
@@ -45,84 +47,48 @@ const html = `
 </html>
 `;
 
-const path1 = [
-  [
-    [116.368904, 39.913423],
-    [116.387271, 39.912501],
-    [116.398258, 39.9046],
-    [116.382122, 39.901176],
-    [116.368904, 39.913423],
-  ],
-];
-
-const path2 = [
-  [
-    [116.368908, 39.913427],
-    [116.387277, 39.912508],
-    [116.398257, 39.9047],
-    [116.382122, 39.901176],
-    [116.368904, 39.913423],
-  ],
-];
-
-const path3 = [
-  [
-    [116.368906, 39.913426],
-    [116.387271, 39.912501],
-    [116.398255, 39.9047],
-    [116.382125, 39.901174],
-    [116.368903, 39.913426],
-  ],
-];
-
 const common = {
   strokeWeight: 1,
   fillOpacity: 0.5,
 };
 
-const a = JSON.stringify({
-  path: path1[0],
-  fillColor: "#7cb342",
-  strokeColor: "#7cb342",
-  ...common,
-});
-
-const b = JSON.stringify({
-  path: path2[0],
-  fillColor: "#1e88e5",
-  strokeColor: "#1e88e5",
-  ...common,
-});
-
-const c = JSON.stringify({
-  path: path3[0],
-  fillColor: "#757575",
-  strokeColor: "#757575",
-  ...common,
-});
-
-const script = `
+const script = (p1, p2, p3) => `
 var postMessage = window.ReactNativeWebView.postMessage
 noRunGroups.clearOverlays()
 runGroups.clearOverlays()
 overGroups.clearOverlays()
 
-var polyline1 = new AMap.Polygon(${a});
-var polyline2 = new AMap.Polygon(${b});
-var polyline3 = new AMap.Polygon(${c});
-
 var handleClick = (params) => (e) => {
   postMessage(JSON.stringify(params));
 }
+var p = [[], [], []];
+var aaaa = (item, icon, paths) => {
+  var polyline = new AMap.Polygon(item);
+  var marker = new AMap.Marker({
+    icon,
+    position: [item.path[0].R, item.path[0].Q],
+  });
+  marker.on("click", handleClick({ aa: 11 }));
+  polyline.on("click", handleClick({ aa: 11 }));
+  paths.push(polyline);
+  paths.push(marker);
+};
 
-polyline1.on("click", handleClick({ aa: 11 }));
-polyline2.on("click", handleClick({ aa: 11 }));
-polyline3.on("click", handleClick({ aa: 11 }));
+${p1}.forEach((item) => {
+  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43ai701kj300j00v741.jpg", p[0])
+});
 
-noRunGroups.addOverlays([polyline1]);
-runGroups.addOverlays([polyline2]);
-overGroups.addOverlays([polyline3]);
+${p2}.forEach((item) => {
+  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43g6i2esj300j00v741.jpg", p[1])
+});
 
+${p3}.forEach((item) => {
+  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43m0n0r1j300j00v741.jpg", p[2])
+});
+
+noRunGroups.addOverlays(p[0]);
+runGroups.addOverlays(p[1]);
+overGroups.addOverlays(p[2]);
 map.setFitView();
 `;
 
@@ -146,11 +112,15 @@ const btnsText = (
 const injectScript = (indexes) =>
   `${indexes.includes(0) ? "noRunGroups.show();" : "noRunGroups.hide();"}
   ${indexes.includes(1) ? "runGroups.show();" : "runGroups.hide();"}
-  ${indexes.includes(2) ? "overGroups.show();" : "overGroups.hide();"}`;
+  ${
+    indexes.includes(2) ? "overGroups.show();" : "overGroups.hide();"
+  }map.setFitView();`;
 
-const TasksMap = () => {
+const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
+  const [isReady, setIsReady] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([0, 1, 2]);
   const webEle = useRef(null);
+  const { tbzb, tbxx } = map;
 
   const btnStatus = (index, text, color) =>
     selectedIndexes.includes(index)
@@ -167,10 +137,46 @@ const TasksMap = () => {
     btnEle(2, "完结", "#757575"),
   ];
 
-  /* useEffect(() => {
-    // webEle.current.injectJavaScript(script);
-    console.log("script :", script);
-  }, [selectedIndexes]); */
+  useEffect(() => {
+    (async function () {
+      fetchTBXX();
+      const { payload } = await fetchTBZB();
+      setIsReady(true);
+    })();
+  }, []);
+
+  const path1 = JSON.stringify(
+    tbzb.wzxList
+      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
+      .map((path) => ({
+        path,
+        fillColor: "#7cb342",
+        strokeColor: "#7cb342",
+        ...common,
+      }))
+  );
+
+  const path2 = JSON.stringify(
+    tbzb.zxList
+      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
+      .map((path) => ({
+        path,
+        fillColor: "#1e88e5",
+        strokeColor: "#1e88e5",
+        ...common,
+      }))
+  );
+
+  const path3 = JSON.stringify(
+    tbzb.ywcList
+      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
+      .map((path) => ({
+        path,
+        fillColor: "#757575",
+        strokeColor: "#757575",
+        ...common,
+      }))
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
@@ -190,26 +196,26 @@ const TasksMap = () => {
           left: 0,
         }}
       />
-      <WebView
-        originWhitelist={["*"]}
-        allowFileAccess={true}
-        onMessage={(event) => {
-          console.log(
-            "event.nativeEvent :",
-            JSON.parse(event.nativeEvent.data).aa
-          );
-        }}
-        source={{
-          html,
-        }}
-        domStorageEnabled={true}
-        allowUniversalAccessFromFileURLs={true}
-        allowFileAccessFromFileURLs={true}
-        injectedJavaScript={script}
-        ref={webEle}
-      />
+      {isReady ? (
+        <WebView
+          originWhitelist={["*"]}
+          allowFileAccess={true}
+          onMessage={(event) => {
+            console.log(
+              "event.nativeEvent :",
+              JSON.parse(event.nativeEvent.data).aa
+            );
+          }}
+          source={{ html }}
+          domStorageEnabled={true}
+          allowUniversalAccessFromFileURLs={true}
+          allowFileAccessFromFileURLs={true}
+          injectedJavaScript={script(path1, path2, path3)}
+          ref={webEle}
+        />
+      ) : null}
     </View>
   );
 };
 
-export default TasksMap;
+export default connect(({ map }) => ({ map }), Actions)(TasksMap);

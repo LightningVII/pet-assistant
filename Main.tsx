@@ -18,12 +18,12 @@ const { Navigator, Screen } = createStackNavigator();
 export default connect(
   () => ({}),
   Actions
-)(props => {
+)((props) => {
   const [isReady, setIsReady] = useState(false);
-  const [initialRouteName, setInitialRouteName] = useState("Home");
+  const [initialRouteName, setInitialRouteName] = useState("Login");
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       const { fetchMe } = props;
       const userid = await AsyncStorage.getItem("userid");
       if (userid) {
@@ -34,7 +34,7 @@ export default connect(
       setIsReady(true);
     })();
   }, []);
-  // if (!isReady) return null;
+  if (!isReady) return null;
 
   return (
     <NavigationContainer>

@@ -40,7 +40,7 @@ export default connect(
 )(function RemoteSensingTaskDetail(props) {
   const { navigation, route, fetchChangespotInfo, remoteSensing } = props;
   const { params } = route;
-  const { tbbm } = params;
+  const { TBBM: tbbm } = params;
   const { remoteSensingInfo } = remoteSensing;
   const { spotImplements, changespot } = remoteSensingInfo || {};
 

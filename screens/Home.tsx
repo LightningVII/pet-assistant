@@ -1,22 +1,19 @@
 import React, { useEffect, useState, Children } from "react";
 import {
   View,
-  FlatList,
-  RefreshControl,
-  Alert,
   AsyncStorage,
   Text,
-  Button,
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import { SearchBar, ListItem, colors, Image } from "react-native-elements";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { colors, Image, withBadge, Badge } from "react-native-elements";
+import { FontAwesome } from "@expo/vector-icons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import RemoteSensingTaskList from "./RemoteSensingTaskList";
-import SafeAreaViewLoading from "../layouts/SafeAreaViewLoading";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Actions from "../redux/remoteSensingActions.js";
+import * as msgActions from "../redux/messageActions.js";
 
 const { width } = Dimensions.get("window");
 
@@ -44,12 +41,7 @@ function MyTabs() {
   );
 }
 
-const TabItem = ({
-  children,
-  text = "",
-  size = null,
-  handlePress = () => console.log("2323 :", 2323),
-}) => (
+const TabItem = ({ children, text = "", size = null, handlePress }) => (
   <TouchableWithoutFeedback onPress={handlePress}>
     <View
       style={{
@@ -76,30 +68,36 @@ const TabItem = ({
 );
 
 function Home(props) {
-  const { navigation, fetchChangespotList, remoteSensing, user } = props;
-  const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState("");
-  const [pageNum, setPageNum] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const { remoteSensingList: list } = remoteSensing || {};
-  const { userid, username } = user?.user || {};
+  const { navigation, user, fetchMessageList, messageCount } = props;
+  const { user: u } = user || {};
+  const { userid, username, depts, roles } = u || {};
+  const [{ deptname }] = depts;
+  const [{ rolename }] = roles;
+  const fetchParams = {
+    pageNum: 1,
+    pageSize: 200,
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchMessageList(fetchParams);
+    });
+    fetchMessageList(fetchParams);
+    return unsubscribe;
+  }, [userid]);
 
   return (
-    <SafeAreaViewLoading
-      loading={loading}
-      style={{ flex: 1, backgroundColor: colors.grey5 }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.grey5 }}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignSelf: "center",
           alignItems: "center",
-          backgroundColor: "#212121", // colors.primary,// "#00897b", // "#1e88e5"
+          backgroundColor: "#212121",
           paddingTop: 15,
           paddingBottom: 15,
           paddingLeft: 20,
-          // marginTop: 22,
           width: "100%",
         }}
       >
@@ -109,9 +107,6 @@ function Home(props) {
             alignItems: "center",
           }}
         >
-          {/* <CircleIcon size={40}>
-            <AntDesign name={"user"} size={20} color={"white"} />
-          </CircleIcon> */}
           <Image
             style={{ width: 40, height: 40 }}
             source={require("../assets/static/id-card.png")}
@@ -127,7 +122,7 @@ function Home(props) {
               {username || "用户名"}
             </Text>
             <Text style={{ fontSize: 12, color: "white" }}>
-              {"第一大队大队长"}
+              {`${deptname}-${rolename}`}
             </Text>
           </View>
         </View>
@@ -157,11 +152,17 @@ function Home(props) {
           handlePress={() => navigation.navigate("MyMessages")}
           text={"我的消息"}
         >
-          <Image
-            style={{ width: 50, height: 50 }}
-            source={require("../assets/static/email.png")}
-          />
-          {/* <AntDesign name={"message1"} size={24} color={"white"} /> */}
+          <View>
+            <Image
+              style={{ width: 50, height: 50 }}
+              source={require("../assets/static/email.png")}
+            />
+            <Badge
+              value={messageCount || null}
+              status={messageCount ? "error" : "success"}
+              containerStyle={{ position: "absolute", top: -4, right: -4 }}
+            />
+          </View>
         </TabItem>
         <TabItem
           handlePress={() => navigation.navigate("RemoteSensingTaskList")}
@@ -171,7 +172,6 @@ function Home(props) {
             style={{ width: 50, height: 50 }}
             source={require("../assets/static/checklist.png")}
           />
-          {/* <FontAwesome5 name={"tasks"} size={24} color={"white"} /> */}
         </TabItem>
         <TabItem
           handlePress={() => navigation.navigate("TasksMap")}
@@ -181,15 +181,22 @@ function Home(props) {
             style={{ width: 50, height: 50 }}
             source={require("../assets/static/radar.png")}
           />
-          {/* <FontAwesome5 name={"map"} size={24} color={"white"} /> */}
         </TabItem>
       </View>
       <MyTabs />
-    </SafeAreaViewLoading>
+    </SafeAreaView>
   );
 }
 
 export default connect(
-  ({ remoteSensing, user }) => ({ remoteSensing, user }),
-  Actions
+  ({ remoteSensing, user, message }) => ({
+    remoteSensing,
+    user,
+    messageCount:
+      message?.messages?.list.filter((a) => a.xxzt === 1)?.length || 0,
+  }),
+  {
+    ...Actions,
+    ...msgActions,
+  }
 )(Home);

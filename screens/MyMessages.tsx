@@ -1,73 +1,65 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  FlatList,
-  RefreshControl,
-  Alert,
-  AsyncStorage,
-  Text,
-  Dimensions,
-  Platform,
-} from "react-native";
+import { View, FlatList, RefreshControl, Text, Platform } from "react-native";
 import { connect } from "react-redux";
 import ViewLoading from "../layouts/ViewLoading";
-import * as Actions from "../redux/remoteSensingActions.js";
+import * as Actions from "../redux/messageActions.js";
 import {
-  Button,
   Header,
   Overlay,
   ListItem,
   colors,
+  Badge,
 } from "react-native-elements";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import moment from "moment";
 
-const { width } = Dimensions.get("window");
-
-function Home(props) {
-  const { navigation, fetchChangespotList, remoteSensing, user } = props;
+function MyMessages(props) {
+  const { messages, fetchMessageList, fetchMessageRead } = props;
   const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState("");
   const [overlayStatus, setOverlayStatus] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [pageNum, setPageNum] = useState(1);
   const [loading, setLoading] = useState(false);
-  const { remoteSensingList: list } = remoteSensing || {};
-  const { userid } = user?.user || {};
+  const { list } = messages || {};
 
   const fetchParams = {
-    userid,
     pageNum,
     pageSize: 200,
-    term: search,
   };
 
   /* useEffect(() => {
     setLoading(true);
     const btns = [{ text: "知道了", onPress: () => setLoading(false) }];
-    fetchChangespotList(fetchParams).then(res => {
+    fetchMessageList(fetchParams).then((res) => {
       if (res?.error) Alert.alert("警告", "服务器网络异常", btns);
       else setLoading(false);
     });
   }, [userid]); */
 
-  const updateSearch = (search) => setSearch(search);
-
   const _onRefresh = () => {
     setRefreshing(true);
     // setPageNum(pageNum + 1);
-    fetchChangespotList(fetchParams).then(() => setRefreshing(false));
+    fetchMessageList(fetchParams).then(() => setRefreshing(false));
   };
 
   const renderItem = ({ item }) => (
     <ListItem
-      onPress={() => setOverlayStatus(true)}
-      title={item.county}
+      onPress={() => {
+        fetchMessageRead(item.xxid).then(() => fetchMessageList(fetchParams));
+        setTitle(item.fsrxm);
+        setContent(item.xxinfo);
+        setOverlayStatus(true);
+      }}
+      title={item.fsrxm}
       subtitle={
-        <Text numberOfLines={1} ellipsizeMode="head">
-          徐州徐州徐州徐州徐州徐州徐州徐州
+        <Text numberOfLines={1} ellipsizeMode={"tail"}>
+          {item.xxinfo}
         </Text>
       }
-      rightElement={<Text>{item.location}</Text>}
+      leftElement={
+        item.xxzt === 1 ? <Badge value="未读" status="error" /> : null
+      }
+      rightElement={<Text>{moment(item.fssj).format("MM-DD hh:mm")}</Text>}
       bottomDivider
     />
   );
@@ -79,15 +71,8 @@ function Home(props) {
     >
       <View style={{ flex: 1 }}>
         <FlatList
-          keyExtractor={({ spotid }) => spotid}
-          data={[
-            {
-              county: "徐州",
-              location: moment().format("MM-DD hh:mm"),
-              spotid: "a",
-              qsxbhdl: "絮絮",
-            },
-          ]} // list
+          keyExtractor={({ xxid }) => xxid}
+          data={list} // list
           renderItem={renderItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
@@ -105,9 +90,13 @@ function Home(props) {
             rightComponent={{
               icon: "close",
               color: "black",
-              onPress: () => setOverlayStatus(false),
+              onPress: () => {
+                setTitle("");
+                setContent("");
+                setOverlayStatus(false);
+              },
             }}
-            centerComponent={{ text: "My Message Title" }}
+            centerComponent={{ text: title }}
             containerStyle={{
               backgroundColor: "white",
               justifyContent: "space-around",
@@ -115,7 +104,7 @@ function Home(props) {
             }}
           />
           {/* <Button title={'asd'} onPress={() => setOverlayStatus(false)} /> */}
-          <Text style={{ padding: 20 }}>Hello from Overlay!</Text>
+          <Text style={{ padding: 20 }}>{content}</Text>
         </View>
       </Overlay>
     </ViewLoading>
@@ -123,6 +112,6 @@ function Home(props) {
 }
 
 export default connect(
-  ({ remoteSensing, user }) => ({ remoteSensing, user }),
+  ({ message }) => ({ messages: message.messages }),
   Actions
-)(Home);
+)(MyMessages);
