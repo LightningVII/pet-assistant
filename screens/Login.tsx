@@ -5,38 +5,40 @@ import {
   View,
   Text,
   Image,
-  AsyncStorage
+  AsyncStorage,
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Actions from "../redux/userActions.js";
 
-const image = require("../assets/icon.png");
+const image = {
+  iconImage: require("../assets/icon.png"),
+};
 
 const icon = {
   size: 20,
   type: "feather",
-  color: "#f2f2f2"
+  color: "#f2f2f2",
 };
 const title = "桂林执法系统平台";
 
 export default connect(
   () => ({}),
   Actions
-)(function(props) {
+)(function (props) {
   const { fetchLogin } = props;
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const setU = v => setUsername(v);
-  const setP = v => setPassword(v);
+  const setU = (v) => setUsername(v);
+  const setP = (v) => setPassword(v);
 
   const inputProps = {
     inputContainerStyle: styles.inputStyle,
     containerStyle: styles.inputContainer,
-    leftIconContainerStyle: styles.inputLeftIconContainer
+    leftIconContainerStyle: styles.inputLeftIconContainer,
   };
 
   return (
@@ -52,7 +54,7 @@ export default connect(
 
       <View style={[styles.container, styles.content]}>
         <View style={styles.iconContainer}>
-          <Image style={styles.icon} source={image} />
+          <Image style={styles.icon} source={image.iconImage} />
         </View>
 
         <View style={styles.wrap}>
@@ -80,14 +82,14 @@ export default connect(
             linearGradientProps={{
               colors: ["#80cbc4", "#4db6ac"],
               start: { x: 0, y: 0.5 },
-              end: { x: 1, y: 0.5 }
+              end: { x: 1, y: 0.5 },
             }}
             loading={loading}
             onPress={async () => {
               setLoading(true);
               const { payload } = await fetchLogin({
                 username,
-                password
+                password,
               });
 
               if (!payload?.userid) {
@@ -114,19 +116,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#FFF"
+    backgroundColor: "#FFF",
   },
   wrap: {
     flex: 1,
     paddingLeft: 60,
     paddingRight: 60,
     borderRadius: 4,
-    alignItems: "center"
+    alignItems: "center",
   },
   content: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    marginTop: -30
+    marginTop: -30,
   },
   iconContainer: {
     flexDirection: "row",
@@ -140,39 +142,39 @@ const styles = StyleSheet.create({
     height: 120,
     width: 120,
     borderWidth: 8,
-    borderRadius: 60
+    borderRadius: 60,
   },
   icon: {
     width: 60,
-    height: 60
+    height: 60,
   },
   title: {
     marginTop: 20,
     fontWeight: "bold",
     fontSize: 28,
-    color: "#FFF"
+    color: "#FFF",
   },
   buttonStyle: {
     height: 50,
     borderRadius: 25,
     width: 160,
-    margin: 40
+    margin: 40,
   },
   titleContainer: {
     justifyContent: "center",
     alignItems: "center",
-    height: "33%"
+    height: "33%",
   },
   inputContainer: {
     borderWidth: 2,
     borderRadius: 4,
     borderColor: "#f2f2f2",
-    marginTop: 20
+    marginTop: 20,
   },
   inputStyle: {
     borderBottomWidth: 0,
     marginTop: 4,
-    marginBottom: 4
+    marginBottom: 4,
   },
-  inputLeftIconContainer: { marginLeft: 2, marginRight: 6 }
+  inputLeftIconContainer: { marginLeft: 2, marginRight: 6 },
 });

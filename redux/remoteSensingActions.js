@@ -3,7 +3,7 @@ import { stringify } from "qs";
 export const REMOTE_SENSING_LIST = "REMOTE_SENSING_LIST";
 export const REMOTE_SENSING_IMPLEMENT_INFO = "REMOTE_SENSING_IMPLEMENT_INFO";
 export const REMOTE_SENSING_CHANGESPOT_INFO = "REMOTE_SENSING_CHANGESPOT_INFO";
-const SERVER_URL = "http://180.124.201.191:9999";
+const SERVER_URL = "http://180.123.42.130:9999";
 
 const getOptions = (url) => ({
   method: "GET",
