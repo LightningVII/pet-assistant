@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 export const SAVE_USER = "SAVE_USER";
-const url = "http://qs.vipgz4.idcfengye.com";
+const url = "http://180.124.201.191:9999";
 
 export const fetchMe = id => async dispatch => {
   const options = {

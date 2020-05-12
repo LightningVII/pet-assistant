@@ -34,7 +34,7 @@ export default connect(
       setIsReady(true);
     })();
   }, []);
-  if (!isReady) return null;
+  // if (!isReady) return null;
 
   return (
     <NavigationContainer>

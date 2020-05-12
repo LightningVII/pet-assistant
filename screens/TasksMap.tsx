@@ -146,7 +146,7 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
   }, []);
 
   const path1 = JSON.stringify(
-    tbzb.wzxList
+    tbzb?.wzxList
       .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
       .map((path) => ({
         path,
@@ -157,7 +157,7 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
   );
 
   const path2 = JSON.stringify(
-    tbzb.zxList
+    tbzb?.zxList
       .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
       .map((path) => ({
         path,
@@ -168,7 +168,7 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
   );
 
   const path3 = JSON.stringify(
-    tbzb.ywcList
+    tbzb?.ywcList
       .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
       .map((path) => ({
         path,

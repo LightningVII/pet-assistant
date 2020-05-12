@@ -12,7 +12,11 @@ import {
   connectActionSheet,
 } from "@expo/react-native-action-sheet";
 
-const theme = {
+interface ITheme {
+  colors: object;
+}
+
+const theme: ITheme = {
   colors: {},
 };
 
@@ -45,7 +49,7 @@ const App = (props) => {
 const ConnectedApp = connectActionSheet(App);
 
 class AppContainer extends React.Component {
-  render() {
+  public render() {
     return (
       <ActionSheetProvider>
         <ConnectedApp />
