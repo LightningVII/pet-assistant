@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Card, ListItem, Button, colors } from "react-native-elements";
 import { connect } from "react-redux";
+import moment from "moment";
 import * as Actions from "../redux/remoteSensingActions.js";
 
 const { width } = Dimensions.get("window");
@@ -136,7 +137,7 @@ export default connect(
               <View key={implementid}>
                 <ListItem
                   title={czry}
-                  subtitle={`时间：${czsj}`}
+                  subtitle={`时间：${moment(czsj).format("MM-DD HH:mm")}`}
                   subtitleStyle={styles.subtitleStyle}
                   topDivider
                   leftAvatar={

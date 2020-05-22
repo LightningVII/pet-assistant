@@ -4,9 +4,9 @@ import {
   View,
   FlatList,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import { ScreenOrientation } from "expo";
+import * as ScreenOrientation from "expo-screen-orientation";
 import * as MediaLibrary from "expo-media-library";
 import * as Permissions from "expo-permissions";
 import ImageTile from "./ImageTile";
@@ -16,12 +16,12 @@ const length = width / 4;
 
 function ImageBrowser(props) {
   const { callback, onChange, max, loadCount, selected: picSelected } = props;
-  const [hasCameraPermission, setHasCameraPermission] = useState();
-  const [hasCameraRollPermission, setHasCameraRollPermission] = useState();
-  const [numColumns, setNumColumns] = useState();
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const [hasCameraRollPermission, setHasCameraRollPermission] = useState(false);
+  const [numColumns, setNumColumns] = useState(4);
   const [photos, setPhotos] = useState([]);
   const [selected, setSelected] = useState(picSelected);
-  const [isEmpty, setIsEmpty] = useState();
+  const [isEmpty, setIsEmpty] = useState(false);
   const [after, setAfter] = useState();
   const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -34,28 +34,29 @@ function ImageBrowser(props) {
     setHasCameraRollPermission(cameraRoll === "granted");
   };
 
-  const getNumColumns = orientation =>
-    orientation.indexOf("PORTRAIT") !== -1 ? 4 : 7;
+  const getNumColumns = (orientation) => (orientation !== -1 ? 4 : 7);
 
   const onOrientationChange = ({ orientationInfo }) => {
     ScreenOrientation.removeOrientationChangeListeners();
     ScreenOrientation.addOrientationChangeListener(onOrientationChange);
-    setNumColumns(getNumColumns(orientationInfo.orientation));
+    setNumColumns(getNumColumns(orientationInfo));
   };
 
-  const findPhoto = item => photos.find(({ id }) => id === item.id);
-  const prepareCallback = newSelected => {
+  const findPhoto = (item) => photos.find(({ id }) => id === item.id);
+  const prepareCallback = (newSelected) => {
     const selectedPhotos = newSelected.map(findPhoto);
     const assetsInfo = Promise.all(
-      selectedPhotos.map(i => MediaLibrary.getAssetInfoAsync(i))
+      selectedPhotos.map((i) => MediaLibrary.getAssetInfoAsync(i))
     );
     callback(assetsInfo);
   };
 
-  const selectImage = item => {
+  const selectImage = (item) => {
     const { id } = item;
     let newSelected = Array.from(selected);
-    const newSelectedIdsIndex = newSelected.map(({ id }) => id).indexOf(id);
+    const newSelectedIdsIndex = newSelected
+      .map(({ id: selectid }) => selectid)
+      .indexOf(id);
     if (newSelectedIdsIndex === -1) newSelected.push(item);
     else newSelected.splice(newSelectedIdsIndex, 1);
 
@@ -65,7 +66,7 @@ function ImageBrowser(props) {
     onChange(newSelected.length, () => prepareCallback(newSelected));
   };
 
-  const processPhotos = data => {
+  const processPhotos = (data) => {
     if (data.totalCount) {
       if (after === data.endCursor) return;
       const uris = data.assets;
@@ -86,7 +87,7 @@ function ImageBrowser(props) {
     } = {
       first: loadCount || 50,
       assetType: "Photos",
-      sortBy: ["creationTime"]
+      sortBy: ["creationTime"],
     };
     if (after) params.after = after;
     if (!hasNextPage) return;
@@ -94,11 +95,11 @@ function ImageBrowser(props) {
   };
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       await getPermissionsAsync();
       ScreenOrientation.addOrientationChangeListener(onOrientationChange);
       const orientation = await ScreenOrientation.getOrientationAsync();
-      setNumColumns(getNumColumns(orientation.orientation));
+      setNumColumns(getNumColumns(orientation));
       getPhotos();
     })();
   }, []);
@@ -111,7 +112,7 @@ function ImageBrowser(props) {
   const getItemLayout = (data, index) => ({
     length,
     offset: length * index,
-    index
+    index,
   });
   const renderImageTile = ({ item, index }) => {
     const itemNumber = selected.map(({ id }) => id).indexOf(item.id);

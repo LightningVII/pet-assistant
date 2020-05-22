@@ -2467,6 +2467,11 @@ expo-permissions@~8.1.0:
   resolved "https://registry.npm.taobao.org/expo-permissions/download/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
   integrity sha1-p/Lukbp2zjpGfnsQraqcpSAbIm8=
 
+expo-screen-orientation@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/expo-screen-orientation/download/expo-screen-orientation-1.0.0.tgz#a168b7493e7a7b45da2c80b1b0d4e89e1f8e7698"
+  integrity sha1-oWi3ST56e0XaLICxsNTonh+Odpg=
+
 expo-sqlite@~8.1.0:
   version "8.1.0"
   resolved "https://registry.npm.taobao.org/expo-sqlite/download/expo-sqlite-8.1.0.tgz#858eb28e1143db281de8a49c99b4a953a81d0834"
@@ -2477,9 +2482,9 @@ expo-sqlite@~8.1.0:
     lodash "^4.17.15"
 
 expo-web-browser@~8.2.1:
-  version "8.2.0"
-  resolved "https://registry.npm.taobao.org/expo-web-browser/download/expo-web-browser-8.2.0.tgz#18f14fef54bb20e723760083689bc0aef130bb23"
-  integrity sha1-GPFP71S7IOcjdgCDaJvArvEwuyM=
+  version "8.2.1"
+  resolved "https://registry.npm.taobao.org/expo-web-browser/download/expo-web-browser-8.2.1.tgz#993ba53371862ed85cfd277ba59a7004ed412905"
+  integrity sha1-mTulM3GGLthc/Sd7pZpwBO1BKQU=
   dependencies:
     compare-urls "^2.0.0"
 

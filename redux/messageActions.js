@@ -1,7 +1,7 @@
 import axios from "axios";
 import { stringify } from "qs";
 export const SAVE_MESSGAGES = "SAVE_MESSGAGES";
-const SERVER_URL = "http://180.123.42.130:9999";
+const SERVER_URL = "http://192.168.1.106:9999";
 const getOptions = (url) => ({
   method: "GET",
   headers: { "content-type": "application/x-www-form-urlencoded" },
