@@ -3,7 +3,7 @@ export const SAVE_TBXX = "SAVE_TBXX";
 export const SAVE_TBZB = "SAVE_TBZB";
 
 export const fetchTBXX = () => async (dispatch, getState) => {
-  const { userid } = getState().user.user;
+  const { userid } = getState()?.user?.user || {};
   try {
     const { data } = await request.arguments("/app/changespot/tbxx?", {
       params: { userid },
@@ -16,7 +16,7 @@ export const fetchTBXX = () => async (dispatch, getState) => {
 };
 
 export const fetchTBZB = () => async (dispatch, getState) => {
-  const { userid } = getState().user.user;
+  const { userid } = getState()?.user?.user || {};
   try {
     const { data } = await request.get("/app/changespot/tbzb", {
       params: { userid },

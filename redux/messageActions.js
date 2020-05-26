@@ -3,7 +3,7 @@ import { stringify } from "qs";
 export const SAVE_MESSGAGES = "SAVE_MESSGAGES";
 
 export const fetchMessageList = (payload) => async (dispatch, getState) => {
-  const { userid } = getState().user.user;
+  const { userid } = getState()?.user?.user || {};
   try {
     const { data } = await request.get("/app/message/list", {
       params: { ...payload, userid },
