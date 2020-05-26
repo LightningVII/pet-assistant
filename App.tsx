@@ -41,7 +41,7 @@ const App = (props) => {
           <Main {...props} />
         </SafeAreaProvider>
       </ThemeProvider>
-      <PushNotification />
+      {/* <PushNotification /> */}
     </ReduxProvider>
   );
 };

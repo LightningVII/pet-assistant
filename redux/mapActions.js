@@ -1,46 +1,29 @@
-import axios from "axios";
-import { stringify } from "qs";
+import request from "../utils/request";
 export const SAVE_TBXX = "SAVE_TBXX";
 export const SAVE_TBZB = "SAVE_TBZB";
-const SERVER_URL = "http://192.168.1.106:9999";
-const getOptions = (url) => ({
-  method: "GET",
-  headers: { "content-type": "application/x-www-form-urlencoded" },
-  url: SERVER_URL + url,
-});
 
 export const fetchTBXX = () => async (dispatch, getState) => {
   const { userid } = getState().user.user;
-  const options = getOptions("/app/changespot/tbxx?" + stringify({ userid }));
   try {
-    const { data } = await axios(options);
+    const { data } = await request.arguments("/app/changespot/tbxx?", {
+      params: { userid },
+    });
 
-    return dispatch({
-      type: SAVE_TBXX,
-      payload: data?.content,
-    });
+    return dispatch({ type: SAVE_TBXX, payload: data?.content });
   } catch (error) {
-    return dispatch({
-      type: "error",
-      error,
-    });
+    return dispatch({ type: "error", error });
   }
 };
 
 export const fetchTBZB = () => async (dispatch, getState) => {
   const { userid } = getState().user.user;
-  const options = getOptions("/app/changespot/tbzb?" + stringify({ userid }));
   try {
-    const { data } = await axios(options);
+    const { data } = await request.get("/app/changespot/tbzb", {
+      params: { userid },
+    });
 
-    return dispatch({
-      type: SAVE_TBZB,
-      payload: data?.content,
-    });
+    return dispatch({ type: SAVE_TBZB, payload: data?.content });
   } catch (error) {
-    return dispatch({
-      type: "error",
-      error,
-    });
+    return dispatch({ type: "error", error });
   }
 };

@@ -1,38 +1,22 @@
-import axios from "axios";
-import qs from "qs";
+import { stringify } from "qs";
+import request from "../utils/request";
 export const SAVE_USER = "SAVE_USER";
-const url = "http://192.168.1.106:9999";
 
-export const fetchMe = id => async dispatch => {
-  const options = {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: qs.stringify({ id }),
-    url: url + "/sys/user/info"
-  };
-
-  const { data } = await axios(options);
-  // const { data } = await new Promise(resolve =>
-  //   setTimeout(() => resolve({ data: { content: { userid: "2" } } }), 1000)
-  // );
+export const fetchMe = (id) => async (dispatch) => {
+  const { data } = await request.get("/sys/user/info", {
+    params: { id },
+  });
   return dispatch({
     type: SAVE_USER,
-    payload: data.content
+    payload: data.content,
   });
 };
 
-export const fetchLogin = params => async dispatch => {
-  const options = {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: qs.stringify(params),
-    url: url + "/login"
-  };
-
-  const { data } = await axios(options);
+export const fetchLogin = (params) => async (dispatch) => {
+  const { data } = await request.post("/login", stringify(params));
 
   return dispatch({
     type: SAVE_USER,
-    payload: data?.content?.user || data?.message
+    payload: data?.content?.user || data?.message,
   });
 };

@@ -8,6 +8,7 @@ const ViewLoading = ({ children, loading = false, ...other }) => (
       height={"auto"}
       width={"auto"}
       overlayBackgroundColor={"transparent"}
+      overlayStyle={{ elevation: 0 }}
       isVisible={loading}
     >
       <View>

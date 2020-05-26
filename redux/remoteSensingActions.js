@@ -1,15 +1,8 @@
-import axios from "axios";
+import request from "../utils/request";
 import { stringify } from "qs";
 export const REMOTE_SENSING_LIST = "REMOTE_SENSING_LIST";
 export const REMOTE_SENSING_IMPLEMENT_INFO = "REMOTE_SENSING_IMPLEMENT_INFO";
 export const REMOTE_SENSING_CHANGESPOT_INFO = "REMOTE_SENSING_CHANGESPOT_INFO";
-const SERVER_URL = "http://192.168.1.106:9999";
-
-const getOptions = (url) => ({
-  method: "GET",
-  headers: { "content-type": "application/x-www-form-urlencoded" },
-  url: SERVER_URL + url,
-});
 
 const TabStatus = {
   TasksClosed: 3,
@@ -17,85 +10,49 @@ const TabStatus = {
   RemoteSensingTaskList: 1,
 };
 
-export const fetchChangespotList = (payload) => async (dispatch) => {
-  const { tabPage, ...other } = payload;
+export const fetchChangespotList = (params) => async (dispatch) => {
+  const { tabPage, ...other } = params;
+  const type =
+    tabPage === "RemoteSensingTaskList"
+      ? REMOTE_SENSING_LIST
+      : `${REMOTE_SENSING_LIST}_${tabPage}`;
 
-  const options = getOptions(
-    "/app/task/myTask?" +
-      stringify({
+  try {
+    const { data } = await request.get("/app/task/myTask", {
+      params: {
         ...other,
         state: TabStatus[tabPage],
-      })
-  );
-  try {
-    const { data } = await axios(options);
+      },
+    });
 
-    return dispatch({
-      type:
-        tabPage === "RemoteSensingTaskList"
-          ? REMOTE_SENSING_LIST
-          : `${REMOTE_SENSING_LIST}_${tabPage}`,
-      payload: data,
-    });
+    return dispatch({ type, payload: data });
   } catch (error) {
-    return dispatch({
-      type: "error",
-      error,
-    });
+    return dispatch({ type: "error", error });
   }
 };
 
-export const fetchChangespotInfo = (payload) => async (dispatch) => {
-  const options = getOptions("/changespot/info?" + stringify(payload));
-  const { data } = await axios(options);
-  return dispatch({
-    type: REMOTE_SENSING_CHANGESPOT_INFO,
-    payload: data,
-  });
+export const fetchChangespotInfo = (params) => async (dispatch) => {
+  const { data } = await request.get("/changespot/info", { params });
+  return dispatch({ type: REMOTE_SENSING_CHANGESPOT_INFO, payload: data });
 };
 
-export const fetchChangespotImplementInfo = (payload) => async (dispatch) => {
-  const options = getOptions("/changespot/implementInfo?" + stringify(payload));
-  const { data } = await axios(options);
-
-  return dispatch({
-    type: REMOTE_SENSING_IMPLEMENT_INFO,
-    payload: data,
-  });
+export const fetchChangespotImplementInfo = (params) => async (dispatch) => {
+  const { data } = await request.get("/changespot/implementInfo", { params });
+  return dispatch({ type: REMOTE_SENSING_IMPLEMENT_INFO, payload: data });
 };
 
-export const fetchChangespotUpdateImplement = (payload) => async (dispatch) => {
-  console.log("fetchChangespotUpdateImplement", payload);
-  const options = {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: stringify(payload),
-    url: SERVER_URL + "/changespot/updateImplement",
-  };
-  return await axios(options);
-};
+export const fetchChangespotUpdateImplement = (payload) => async (dispatch) =>
+  await request.post("/changespot/updateImplement", stringify(payload));
 
 export const fetchChangespotImplement = (payload) => async (dispatch) => {
-  const options = {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    data: stringify(payload),
-    url: SERVER_URL + "/changespot/implement",
-  };
-  console.log('payload', payload)
   try {
-    return await axios(options);;
+    return await request.post("/changespot/implement", stringify(payload));
   } catch (error) {
-    return dispatch({
-      type: "error",
-      error,
-    });
+    return dispatch({ type: "error", error });
   }
 };
 
-export const fetchChangespotUpload = (selectedImages, payload) => async (
-  dispatch
-) => {
+export const fetchChangespotUpload = (selectedImages) => async (dispatch) => {
   const formData = new FormData();
 
   selectedImages.forEach((element) => {
@@ -117,8 +74,8 @@ export const fetchChangespotUpload = (selectedImages, payload) => async (
     // onUploadProgress: callback
   };
 
-  const { data } = await axios
-    .post(SERVER_URL + "/changespot/upload", formData, options)
+  const { data } = await request
+    .post("/changespot/upload", formData, options)
     .catch((error) => {
       throw error;
     });

@@ -46,7 +46,7 @@ function RemoteSensingTaskList(props) {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchChangespotList(fetchParams);
     });
-    
+
     const btns = [{ text: "知道了", onPress: () => setLoading(false) }];
     fetchChangespotList(fetchParams).then((res) => {
       if (res?.error) Alert.alert("警告", "服务器网络异常", btns);
@@ -55,7 +55,7 @@ function RemoteSensingTaskList(props) {
     return unsubscribe;
   }, [userid]);
 
-  const _onRefresh = () => {
+  const onRefresh = () => {
     setRefreshing(true);
     // setPageNum(pageNum + 1);
     fetchChangespotList(fetchParams).then(() => setRefreshing(false));
@@ -91,11 +91,11 @@ function RemoteSensingTaskList(props) {
     >
       <View style={{ flex: 1 }}>
         <FlatList
-          keyExtractor={({ ROW_ID }) => ROW_ID}
+          keyExtractor={({ ROW_ID }) => ROW_ID + ""}
           data={remoteSensing?.[tabReducer?.[route.name]]}
           renderItem={renderItem}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
       </View>

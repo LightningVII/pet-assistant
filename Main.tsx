@@ -30,11 +30,10 @@ export default connect(
         await fetchMe(userid);
         setInitialRouteName("Home");
       }
-
       setIsReady(true);
     })();
   }, []);
-  // if (!isReady) return null;
+  if (!isReady) return null;
 
   return (
     <NavigationContainer>
