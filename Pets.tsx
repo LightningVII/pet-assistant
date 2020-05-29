@@ -8,6 +8,7 @@ import { AntDesign } from "@expo/vector-icons";
 import List from "./screens/List";
 import TasksMap from "./screens/TasksMap";
 import Article from "./screens/Article";
+import Me from "./screens/Me";
 
 function SettingsScreen({ navigation }) {
   return (
@@ -49,12 +50,16 @@ const tabBar = {
 const routeZHName = {
   Map: "附近地图",
   List: "宠物数据",
-  Settings: "我",
+  Me: "我",
 };
 
 function HomeTabsScreen({ navi, route }) {
   useLayoutEffect(() => {
-    navi.setOptions({ title: routeZHName[getHeaderTitle(route)] });
+    const titleKey = getHeaderTitle(route);
+    navi.setOptions({
+      title: routeZHName[titleKey],
+      headerShown: titleKey === "Map",
+    });
   }, [navi, route]);
 
   return (
@@ -77,11 +82,7 @@ function HomeTabsScreen({ navi, route }) {
         options={{ tabBarLabel: "宠物数据" }}
         component={HomeStackScreen}
       />
-      <Tab.Screen
-        name="Settings"
-        options={{ tabBarLabel: "我" }}
-        component={SettingsScreen}
-      />
+      <Tab.Screen name="Me" options={{ tabBarLabel: "我" }} component={Me} />
     </Tab.Navigator>
   );
 }
@@ -117,7 +118,6 @@ export default function () {
           name="Home"
           options={({ route }) => ({
             headerStyle: { backgroundColor: "tomato" },
-            // title: getHeaderTitle(route),
             headerTintColor: "#FFF",
           })}
           component={HomeDrawerScreen}
