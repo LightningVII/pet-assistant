@@ -53,44 +53,44 @@ const common = {
 };
 
 const script = (p1, p2, p3) => `
-var postMessage = window.ReactNativeWebView.postMessage
-noRunGroups.clearOverlays()
-runGroups.clearOverlays()
-overGroups.clearOverlays()
+  var postMessage = window.ReactNativeWebView.postMessage
+  noRunGroups.clearOverlays()
+  runGroups.clearOverlays()
+  overGroups.clearOverlays()
 
-var handleClick = (params) => (e) => {
-  postMessage(JSON.stringify(params));
-}
-var p = [[], [], []];
-var aaaa = (item, icon, paths) => {
-  var polyline = new AMap.Polygon(item);
-  var marker = new AMap.Marker({
-    icon,
-    position: [item.path[0].R, item.path[0].Q],
+  var handleClick = (params) => (e) => {
+    postMessage(JSON.stringify(params));
+  }
+  var p = [[], [], []];
+  var bindEvents = (item, icon, paths) => {
+    var polyline = new AMap.Polygon(item);
+    var marker = new AMap.Marker({
+      icon,
+      position: [item.path[0].R, item.path[0].Q],
+    });
+    marker.on("click", handleClick({ aa: 11 }));
+    polyline.on("click", handleClick({ aa: 11 }));
+    paths.push(polyline);
+    paths.push(marker);
+  };
+
+  ${p1}.forEach((item) => {
+    bindEvents(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43ai701kj300j00v741.jpg", p[0])
   });
-  marker.on("click", handleClick({ aa: 11 }));
-  polyline.on("click", handleClick({ aa: 11 }));
-  paths.push(polyline);
-  paths.push(marker);
-};
 
-${p1}.forEach((item) => {
-  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43ai701kj300j00v741.jpg", p[0])
-});
+  ${p2}.forEach((item) => {
+    bindEvents(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43g6i2esj300j00v741.jpg", p[1])
+  });
 
-${p2}.forEach((item) => {
-  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43g6i2esj300j00v741.jpg", p[1])
-});
+  ${p3}.forEach((item) => {
+    bindEvents(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43m0n0r1j300j00v741.jpg", p[2])
+  });
 
-${p3}.forEach((item) => {
-  aaaa(item, "https://tva1.sinaimg.cn/large/007S8ZIlgy1ge43m0n0r1j300j00v741.jpg", p[2])
-});
-
-noRunGroups.addOverlays(p[0]);
-runGroups.addOverlays(p[1]);
-overGroups.addOverlays(p[2]);
-map.setFitView();
-`;
+  noRunGroups.addOverlays(p[0]);
+  runGroups.addOverlays(p[1]);
+  overGroups.addOverlays(p[2]);
+  map.setFitView();
+  `;
 
 const btnsText = (
   text?: string,
@@ -116,10 +116,14 @@ const injectScript = (indexes) =>
     indexes.includes(2) ? "overGroups.show();" : "overGroups.hide();"
   }map.setFitView();`;
 
+let path1: string;
+let path2: string;
+let path3: string;
+
 const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
-  const [isReady, setIsReady] = useState(false);
+  const [wvLoaded, setWVLoaded] = useState(false);
   const [selectedIndexes, setSelectedIndexes] = useState([0, 1, 2]);
-  const webEle = useRef(null);
+  const wv = useRef(null);
   const { tbzb, tbxx } = map;
 
   const btnStatus = (index, text, color) =>
@@ -139,51 +143,51 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
 
   useEffect(() => {
     (async function () {
-      fetchTBXX();
-      const { payload } = await fetchTBZB();
-      setIsReady(true);
+      if (!wvLoaded) {
+        fetchTBXX();
+        const {
+          payload: { wzxList, zxList, ywcList },
+        } = await fetchTBZB();
+
+        path1 = JSON.stringify(
+          wzxList.map(handleMap).map((path) => ({
+            path,
+            fillColor: "#7cb342",
+            strokeColor: "#7cb342",
+            ...common,
+          }))
+        );
+
+        path2 = JSON.stringify(
+          zxList.map(handleMap).map((path) => ({
+            path,
+            fillColor: "#1e88e5",
+            strokeColor: "#1e88e5",
+            ...common,
+          }))
+        );
+
+        path3 = JSON.stringify(
+          ywcList.map(handleMap).map((path) => ({
+            path,
+            fillColor: "#757575",
+            strokeColor: "#757575",
+            ...common,
+          }))
+        );
+      }
+      if (wvLoaded) wv.current.injectJavaScript(script(path1, path2, path3));
     })();
-  }, []);
+  }, [wvLoaded]);
 
-  const path1 = JSON.stringify(
-    tbzb?.wzxList
-      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
-      .map((path) => ({
-        path,
-        fillColor: "#7cb342",
-        strokeColor: "#7cb342",
-        ...common,
-      }))
-  );
-
-  const path2 = JSON.stringify(
-    tbzb?.zxList
-      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
-      .map((path) => ({
-        path,
-        fillColor: "#1e88e5",
-        strokeColor: "#1e88e5",
-        ...common,
-      }))
-  );
-
-  const path3 = JSON.stringify(
-    tbzb?.ywcList
-      .map((item) => JSON.parse(item.GEOMETRY).coordinates[0])
-      .map((path) => ({
-        path,
-        fillColor: "#757575",
-        strokeColor: "#757575",
-        ...common,
-      }))
-  );
+  const handleMap = (item) => JSON.parse(item.GEOMETRY).coordinates[0];
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
       <ButtonGroup
         selectMultiple
         onPress={(indexes: any) => {
-          webEle.current.injectJavaScript(injectScript(indexes));
+          wv.current.injectJavaScript(injectScript(indexes));
           setSelectedIndexes(indexes);
         }}
         selectedIndexes={selectedIndexes}
@@ -196,24 +200,22 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
           left: 0,
         }}
       />
-      {isReady ? (
-        <WebView
-          originWhitelist={["*"]}
-          allowFileAccess={true}
-          onMessage={(event) => {
-            console.log(
-              "event.nativeEvent :",
-              JSON.parse(event.nativeEvent.data).aa
-            );
-          }}
-          source={{ html }}
-          domStorageEnabled={true}
-          allowUniversalAccessFromFileURLs={true}
-          allowFileAccessFromFileURLs={true}
-          injectedJavaScript={script(path1, path2, path3)}
-          ref={webEle}
-        />
-      ) : null}
+      <WebView
+        originWhitelist={["*"]}
+        allowFileAccess={true}
+        onMessage={(event) => {
+          console.log(
+            "event.nativeEvent :",
+            JSON.parse(event.nativeEvent.data).aa
+          );
+        }}
+        source={{ html }}
+        domStorageEnabled={true}
+        allowUniversalAccessFromFileURLs={true}
+        allowFileAccessFromFileURLs={true}
+        onLoadEnd={() => setWVLoaded(true)}
+        ref={wv}
+      />
     </View>
   );
 };
