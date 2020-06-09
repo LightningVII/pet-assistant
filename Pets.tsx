@@ -7,6 +7,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import List from "./screens/List";
 import TasksMap from "./screens/TasksMap";
+import PetData from "./screens/PetData";
 import Article from "./screens/Article";
 import Me from "./screens/Me";
 
@@ -80,7 +81,7 @@ function HomeTabsScreen({ navi, route }) {
       <Tab.Screen
         name="List"
         options={{ tabBarLabel: "宠物数据" }}
-        component={HomeStackScreen}
+        component={PetData}
       />
       <Tab.Screen name="Me" options={{ tabBarLabel: "我" }} component={Me} />
     </Tab.Navigator>
