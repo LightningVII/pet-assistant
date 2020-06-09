@@ -2462,6 +2462,11 @@ expo-media-library@~8.1.0:
   resolved "https://registry.npm.taobao.org/expo-media-library/download/expo-media-library-8.1.0.tgz#f5d4b24819aa518e69d971f92b55c12f60c85ba5"
   integrity sha1-9dSySBmqUY5p2XH5K1XBL2DIW6U=
 
+expo-network@~2.1.0:
+  version "2.1.1"
+  resolved "https://registry.npm.taobao.org/expo-network/download/expo-network-2.1.1.tgz#ae57ed421761153564444ba3117771861fb4532b"
+  integrity sha1-rlftQhdhFTVkREujEXdxhh+0Uys=
+
 expo-permissions@~8.1.0:
   version "8.1.0"
   resolved "https://registry.npm.taobao.org/expo-permissions/download/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
