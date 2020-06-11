@@ -203,10 +203,10 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
         originWhitelist={["*"]}
         allowFileAccess={true}
         onMessage={(event) => {
-          console.log(
-            "event.nativeEvent :",
-            JSON.parse(event.nativeEvent.data).aa
-          );
+          // console.log(
+          //   "event.nativeEvent :",
+          //   JSON.parse(event.nativeEvent.data).aa
+          // );
         }}
         source={{ html }}
         domStorageEnabled={true}

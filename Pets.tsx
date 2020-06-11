@@ -7,7 +7,6 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import TasksMap from "./screens/TasksMap";
 import PetData from "./screens/PetData";
-import Article from "./screens/Article";
 import Me from "./screens/Me";
 
 function SettingsScreen({ navigation }) {
@@ -25,9 +24,6 @@ const Tab = createBottomTabNavigator();
 const tabBar = {
   List: (color, size) => <AntDesign name={"home"} size={size} color={color} />,
   Settings: (color, size) => (
-    <AntDesign name={"setting"} size={size} color={color} />
-  ),
-  Article: (color, size) => (
     <AntDesign name={"setting"} size={size} color={color} />
   ),
   Map: (color, size) => (
@@ -114,8 +110,8 @@ export default function () {
           })}
           component={HomeDrawerScreen}
         />
-        <Stack.Screen name="Article">
-          {(props) => <Article {...props} />}
+        <Stack.Screen name="SettingsScreen">
+          {(props) => <SettingsScreen {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
