@@ -145,12 +145,11 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
     (async function () {
       if (!wvLoaded) {
         fetchTBXX();
-        const {
-          payload: { wzxList, zxList, ywcList },
-        } = await fetchTBZB();
+        const payload = await fetchTBZB();
+        const { wzxList, zxList, ywcList } = payload || {};
 
         path1 = JSON.stringify(
-          wzxList.map(handleMap).map((path) => ({
+          wzxList?.map(handleMap).map((path) => ({
             path,
             fillColor: "#7cb342",
             strokeColor: "#7cb342",
@@ -159,7 +158,7 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
         );
 
         path2 = JSON.stringify(
-          zxList.map(handleMap).map((path) => ({
+          zxList?.map(handleMap).map((path) => ({
             path,
             fillColor: "#1e88e5",
             strokeColor: "#1e88e5",
@@ -168,7 +167,7 @@ const TasksMap = ({ fetchTBXX, fetchTBZB, map }) => {
         );
 
         path3 = JSON.stringify(
-          ywcList.map(handleMap).map((path) => ({
+          ywcList?.map(handleMap).map((path) => ({
             path,
             fillColor: "#757575",
             strokeColor: "#757575",

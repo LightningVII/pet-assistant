@@ -39,9 +39,9 @@ const ToolsCard = ({ headerTitle, tools }) => (
       />
     }
   >
-    {create2DArray(tools).map((item) => (
-      <View style={styles.cardContent}>
-        {item ? item.map(() => <ImageItem />) : null}
+    {create2DArray(tools).map((item, index) => (
+      <View key={index.toString()} style={styles.cardContent}>
+        {item ? item.map((t) => <ImageItem key={t.toString()} />) : null}
       </View>
     ))}
   </Card>
