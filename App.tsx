@@ -4,6 +4,7 @@ import { ThemeProvider } from "react-native-elements";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import PushNotification from "./components/PushNotification";
 import Main from "./Main";
+import Pets from "./Pets";
 import Store from "./redux/Store";
 import * as Font from "expo-font";
 
@@ -38,7 +39,8 @@ const App = (props) => {
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          <Main {...props} />
+          <Pets {...props} />
+          {/* <Main {...props} /> */}
         </SafeAreaProvider>
       </ThemeProvider>
       {/* <PushNotification /> */}

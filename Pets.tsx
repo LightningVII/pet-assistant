@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
-import List from "./screens/List";
 import TasksMap from "./screens/TasksMap";
 import PetData from "./screens/PetData";
 import Article from "./screens/Article";
@@ -21,14 +20,6 @@ function SettingsScreen({ navigation }) {
 }
 
 const Stack = createStackNavigator();
-
-function HomeStackScreen() {
-  return (
-    <Stack.Navigator headerMode={"screen"}>
-      <Stack.Screen name="List">{(props) => <List {...props} />}</Stack.Screen>
-    </Stack.Navigator>
-  );
-}
 
 const Tab = createBottomTabNavigator();
 const tabBar = {
