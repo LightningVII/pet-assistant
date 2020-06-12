@@ -1,13 +1,15 @@
 {
   "expo": {
-    "name": "桂林执法",
+    "name": "guilin-app",
     "slug": "guilin-app",
-    "privacy": "public",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "myapp",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,14 +18,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
-    "description": "",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.otitan.guilin"
+      "bundleIdentifier": "com.pet.tia"
     },
     "android": {
-      "package": "com.otitan.guilin"
-    }
+      "package": "com.pet.tia"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
