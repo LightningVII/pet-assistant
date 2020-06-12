@@ -6,7 +6,7 @@ import PushNotification from "./components/PushNotification";
 import Main from "./Main";
 import Pets from "./Pets";
 import Store from "./redux/Store";
-import * as Font from "expo-font";
+import useCachedResources from "./hooks/useCachedResources";
 
 import {
   ActionSheetProvider,
@@ -22,19 +22,9 @@ const theme: ITheme = {
 };
 
 const App = (props) => {
-  const [isReady, setIsReady] = useState(false);
+  const isLoadingComplete = useCachedResources();
 
-  useEffect(() => {
-    (async function () {
-      await Font.loadAsync({
-        antoutline: require("./assets/fonts/antoutline.ttf"),
-        antfill: require("./assets/fonts/antfill.ttf"),
-      });
-      setIsReady(true);
-    })();
-  }, []);
-
-  if (!isReady) return null;
+  if (!isLoadingComplete) return null;
   return (
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>

@@ -7,7 +7,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import TasksMap from "./screens/TasksMap";
 import PetData from "./screens/PetData";
+import ImagesPicker from "./screens/ImagesPicker";
 import Me from "./screens/Me";
+import FeedbackForm from "./screens/FeedbackForm";
 
 function SettingsScreen({ navigation }) {
   return (
@@ -113,6 +115,7 @@ export default function () {
         <Stack.Screen name="SettingsScreen">
           {(props) => <SettingsScreen {...props} />}
         </Stack.Screen>
+        <Stack.Screen name="ImagesPicker" component={ImagesPicker} />
       </Stack.Navigator>
     </NavigationContainer>
   );

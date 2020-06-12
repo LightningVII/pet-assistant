@@ -3,7 +3,7 @@ import {
   Alert,
   View,
   TouchableWithoutFeedback,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -13,7 +13,7 @@ import {
   Overlay,
   ListItem,
   Image,
-  colors
+  colors,
 } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
@@ -31,15 +31,15 @@ const styles = {
     marginRight: 0,
     backgroundColor: "#FFF",
     borderWidth: 0,
-    borderRadius: 0
+    borderRadius: 0,
   },
   input: {
     marginBottom: 0,
     backgroundColor: "#FFF",
     marginTop: 20,
     paddingTop: 20,
-    paddingBottom: 20
-  }
+    paddingBottom: 20,
+  },
 };
 
 function FeedbackForm(props) {
@@ -49,14 +49,14 @@ function FeedbackForm(props) {
     user,
     fetchChangespotImplement,
     fetchChangespotUpdateImplement,
-    fetchChangespotUpload
+    fetchChangespotUpload,
   } = props;
   const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [cameraImages, setCameraImages] = useState([]);
   const [oriImages, setOriImages] = useState([]);
-  const [content, setContent] = useState('');
-  const [remark, setRemark] = useState('');
+  const [content, setContent] = useState("");
+  const [remark, setRemark] = useState("");
   const { showActionSheetWithOptions } = useActionSheet();
   const [isVisible, setIsVisible] = useState(false);
   const [source, setSource] = useState(null);
@@ -73,47 +73,47 @@ function FeedbackForm(props) {
     czsj: moment(date).format("YYYY-MM-DD"),
     czry: user?.user?.userid,
     czyj: content,
-    remark
+    remark,
   };
 
   useEffect(() => {
-    const { fjs, czsj, czyj, remark, type } = route?.params;
+    const { fjs, czsj, czyj, remark: oriRemark, type } = route?.params || {};
 
     if (type === "update") {
       setOriImages(
-        fjs?.map(localUri => {
+        fjs?.map((localUri) => {
           let tempArr = localUri.split(".");
           tempArr = tempArr[tempArr.length - 2].split("/");
           return {
             localUri,
-            id: tempArr[tempArr.length - 1]
+            id: tempArr[tempArr.length - 1],
           };
         })
       );
       setContent(czyj);
-      setRemark(remark);
+      setRemark(oriRemark);
       setDate(czsj);
     }
   }, []);
 
   navigation.setOptions({
-    headerTitle: "请填写执行报告"
+    headerTitle: "请填写执行报告",
   });
 
   const imagesPicker = () =>
     navigation.navigate("ImagesPicker", {
-      callback: data =>
+      callback: (data) =>
         setSelectedImages(
-          data?.photos.map(p => ({
+          data?.photos.map((p) => ({
             id: p.id,
             filename: p.filename,
             localUri: p.localUri,
             uri: p.uri,
-            mediaType: p.mediaType
+            mediaType: p.mediaType,
           })) || []
         ),
       max: 9 - cameraImages.length,
-      selected: selectedImages
+      selected: selectedImages,
     });
   const cancel = () => console.log("cancel :");
   const camera = async () => {
@@ -137,9 +137,9 @@ function FeedbackForm(props) {
     showActionSheetWithOptions(
       {
         options: BUTTONS,
-        cancelButtonIndex: 2
+        cancelButtonIndex: 2,
       },
-      buttonIndex => {
+      (buttonIndex) => {
         actions[buttonIndex]();
       }
     );
@@ -150,7 +150,7 @@ function FeedbackForm(props) {
       <View style={{ flex: 1, backgroundColor: colors.grey5 }}>
         <Input
           value={content}
-          onChange={e => setContent(e?.nativeEvent?.text)}
+          onChange={(e) => setContent(e?.nativeEvent?.text)}
           // ref={component => (this._textInput = component)}
           containerStyle={styles.input}
           inputContainerStyle={{ borderBottomWidth: 0 }}
@@ -161,7 +161,7 @@ function FeedbackForm(props) {
 
         <Input
           value={remark}
-          onChange={e => setRemark(e?.nativeEvent?.text)}
+          onChange={(e) => setRemark(e?.nativeEvent?.text)}
           containerStyle={styles.input}
           inputContainerStyle={{ borderBottomWidth: 0 }}
           label={"备注"}
@@ -215,10 +215,10 @@ function FeedbackForm(props) {
               padding: 10,
               backgroundColor: "#FFF",
               marginTop: 20,
-              flexWrap: "wrap"
+              flexWrap: "wrap",
             }}
           >
-            {[...cameraImages, ...selectedImages, ...oriImages].map(image => (
+            {[...cameraImages, ...selectedImages, ...oriImages].map((image) => (
               <TouchableWithoutFeedback
                 key={image.id}
                 onPress={() => {
@@ -232,7 +232,7 @@ function FeedbackForm(props) {
                   containerStyle={{
                     marginRight: 4,
                     width: 80,
-                    height: 80
+                    height: 80,
                   }}
                   PlaceholderContent={
                     <ActivityIndicator size="large" color="#FFF" />
@@ -278,7 +278,7 @@ function FeedbackForm(props) {
               } catch ({ code, message }) {
                 setLoading(false);
                 Alert.alert("文件上传失败", `${code}-${message}`, [
-                  { text: "知道了" }
+                  { text: "知道了" },
                 ]);
                 return;
               }
@@ -288,12 +288,12 @@ function FeedbackForm(props) {
               await fetchChangespotUpdateImplement({
                 ...params,
                 fj: fj?.content,
-                implementId: route?.params?.implementid
+                implementId: route?.params?.implementid,
               });
             } else {
               await fetchChangespotImplement({
                 ...params,
-                fj: fj?.content
+                fj: fj?.content,
               });
             }
 

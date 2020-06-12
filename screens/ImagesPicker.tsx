@@ -1,5 +1,6 @@
 import * as React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 import { Button, colors } from "react-native-elements";
 import ImageBrowser from "../components/ImageBrowser";
 import { AntDesign } from "@expo/vector-icons";
@@ -7,7 +8,7 @@ import { AntDesign } from "@expo/vector-icons";
 const DoneBtn = ({
   title,
   disabled,
-  onPress
+  onPress,
 }: {
   title: any;
   disabled?: any;
@@ -36,23 +37,23 @@ function ImagesPicker(props) {
         }`}
       />
     ),
-    headerLeft: props => (
+    headerLeft: () => (
       <AntDesign
         onPress={() => navigation.goBack()}
         name={"close"}
         size={20}
         style={{ marginLeft: 20 }}
       />
-    )
+    ),
   });
 
-  const imagesCallback = callback => {
+  const imagesCallback = (callback) => {
     callback
-      .then(photos => {
+      .then((photos) => {
         route?.params?.callback({ photos });
         navigation.goBack();
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   };
 
   const updateHandler = (count, onSubmit) =>
@@ -62,11 +63,11 @@ function ImagesPicker(props) {
           title={`完成${count > 0 ? `(${count}/${max})` : ""}`}
           onPress={onSubmit}
         />
-      )
+      ),
     });
 
   return (
-    <SafeAreaView
+    <View
       style={{ flex: 1, position: "relative", backgroundColor: colors.grey5 }}
     >
       <ImageBrowser
@@ -75,7 +76,7 @@ function ImagesPicker(props) {
         onChange={updateHandler}
         callback={imagesCallback}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
