@@ -79,11 +79,11 @@ export default connect(
           <Button
             title={"登 录"}
             buttonStyle={styles.buttonStyle}
-            linearGradientProps={{
+            /* linearGradientProps={{
               colors: ["#80cbc4", "#4db6ac"],
               start: { x: 0, y: 0.5 },
               end: { x: 1, y: 0.5 },
-            }}
+            }} */
             loading={loading}
             onPress={async () => {
               setLoading(true);
