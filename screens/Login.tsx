@@ -79,6 +79,7 @@ export default connect(
           <Button
             title={"登 录"}
             buttonStyle={styles.buttonStyle}
+            ViewComponent={LinearGradient}
             linearGradientProps={{
               colors: ["#80cbc4", "#4db6ac"],
               start: { x: 0, y: 0.5 },
@@ -170,11 +171,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: "#f2f2f2",
     marginTop: 20,
+    height: 50,
   },
   inputStyle: {
     borderBottomWidth: 0,
-    marginTop: 4,
-    marginBottom: 4,
   },
   inputLeftIconContainer: { marginLeft: 2, marginRight: 6 },
 });

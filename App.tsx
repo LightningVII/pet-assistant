@@ -28,8 +28,8 @@ const App = (props) => {
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          <Pets {...props} />
-          {/* <Main {...props} /> */}
+          {/* <Pets {...props} /> */}
+          <Main {...props} />
         </SafeAreaProvider>
       </ThemeProvider>
       {/* <PushNotification /> */}
