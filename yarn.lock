@@ -4599,11 +4599,6 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   resolved "https://registry.npm.taobao.org/react-is/download/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
 
-react-native-ble-plx@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npm.taobao.org/react-native-ble-plx/download/react-native-ble-plx-2.0.0.tgz#e4ef38844922efeaa04836d33d548cfa7838604a"
-  integrity sha1-5O84hEki7+qgSDbTPVSM+ng4YEo=
-
 react-native-elements@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npm.taobao.org/react-native-elements/download/react-native-elements-2.0.2.tgz#2819d556cea481cad29fa79c6a8ccb47ef6f456e"
