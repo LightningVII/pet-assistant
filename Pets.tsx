@@ -10,6 +10,11 @@ import PetData from "./screens/PetData";
 import ImagesPicker from "./screens/ImagesPicker";
 import Me from "./screens/Me";
 import FeedbackForm from "./screens/FeedbackForm";
+import Login from "./screens/Login";
+import Home from "./screens/Home";
+import RemoteSensingTaskDetail from "./screens/RemoteSensingTaskDetail";
+import RemoteSensingTaskList from "./screens/RemoteSensingTaskList";
+import MyMessages from "./screens/MyMessages";
 
 function SettingsScreen({ navigation }) {
   return (
@@ -103,7 +108,7 @@ function getHeaderTitle(route) {
 export default function () {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Home"
           options={({ route }) => ({
@@ -116,6 +121,36 @@ export default function () {
           {(props) => <SettingsScreen {...props} />}
         </Stack.Screen>
         <Stack.Screen name="ImagesPicker" component={ImagesPicker} />
+        <Stack.Screen
+          name="Login"
+          options={{ headerShown: false }}
+          component={Login}
+        />
+        <Stack.Screen
+          name="TaskCenter"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RemoteSensingTaskDetail"
+          component={RemoteSensingTaskDetail}
+        />
+        <Stack.Screen name="FeedbackForm" component={FeedbackForm} />
+        <Stack.Screen
+          name="MyMessages"
+          options={{ title: "我的消息" }}
+          component={MyMessages}
+        />
+        <Stack.Screen
+          name="RemoteSensingTaskList"
+          options={{ title: "我的任务" }}
+          component={RemoteSensingTaskList}
+        />
+        <Stack.Screen
+          name="TasksMap"
+          options={{ title: "任务地图" }}
+          component={TasksMap}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

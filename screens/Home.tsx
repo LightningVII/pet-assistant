@@ -71,20 +71,20 @@ function Home(props) {
   const { navigation, user, fetchMessageList, messageCount } = props;
   const { user: u } = user || {};
   const { userid, username, depts, roles } = u || {};
-  const [{ deptname }] = depts;
-  const [{ rolename }] = roles;
+  const [{ deptname }] = depts || [{ deptname: "核心技术" }];
+  const [{ rolename }] = roles || [{ rolename: "开发" }];
   const fetchParams = {
     pageNum: 1,
     pageSize: 200,
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchMessageList(fetchParams);
     });
     fetchMessageList(fetchParams);
     return unsubscribe;
-  }, [userid]);
+  }, [userid]); */
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.grey5 }}>

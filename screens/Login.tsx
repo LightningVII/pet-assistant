@@ -88,18 +88,31 @@ export default connect(
             loading={loading}
             onPress={async () => {
               setLoading(true);
-              const { payload } = await fetchLogin({
+
+              /* const { payload } = await fetchLogin({
                 username,
                 password,
-              });
+              }); */
 
-              if (!payload?.userid) {
-                setLoading(false);
-                Alert.alert(payload);
-                return;
-              }
+              const { payload } = await new Promise((resolve) =>
+                resolve({
+                  payload: {
+                    userid: 1,
+                  },
+                })
+              );
 
-              await AsyncStorage.setItem("userid", payload?.userid);
+              console.log("payload :>> ", payload);
+
+              // props.navigation.navigate("Home");
+
+              // if (!payload?.userid) {
+              //   setLoading(false);
+              //   Alert.alert(payload);
+              //   return;
+              // }
+
+              // await AsyncStorage.setItem("userid", payload?.userid);
 
               setLoading(false);
               props.navigation.canGoBack()

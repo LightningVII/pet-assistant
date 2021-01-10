@@ -15,7 +15,7 @@ const create2DArray = (array) =>
     .fill({})
     .map((_, index) => array.slice(index * 4, (index + 1) * 4));
 
-const ImageItem = ({ handlePress = () => ({}) }) => (
+const ImageItem = ({ handlePress }) => (
   <TabItem
     handlePress={handlePress}
     text="我的任务"
@@ -29,7 +29,7 @@ const ImageItem = ({ handlePress = () => ({}) }) => (
   </TabItem>
 );
 
-const ToolsCard = ({ headerTitle, tools }) => (
+const ToolsCard = ({ headerTitle, tools, handlePress = () => {} }) => (
   <Card
     containerStyle={styles.cardContainer}
     title={
@@ -41,7 +41,11 @@ const ToolsCard = ({ headerTitle, tools }) => (
   >
     {create2DArray(tools).map((item, index) => (
       <View key={index.toString()} style={styles.cardContent}>
-        {item ? item.map((t) => <ImageItem key={t.toString()} />) : null}
+        {item
+          ? item.map((t) => (
+              <ImageItem handlePress={handlePress} key={t.toString()} />
+            ))
+          : null}
       </View>
     ))}
   </Card>
@@ -78,7 +82,13 @@ export default connect(
       </LinearGradient>
 
       <ScrollView style={styles.content}>
-        <ToolsCard headerTitle="养宠生活" tools={items1} />
+        <ToolsCard
+          handlePress={() => {
+            props.navigation.navigate("TaskCenter");
+          }}
+          headerTitle="养宠生活"
+          tools={items1}
+        />
         <ToolsCard headerTitle="我的交易" tools={items2} />
         <ToolsCard headerTitle="我的工具" tools={items3} />
       </ScrollView>

@@ -49,8 +49,9 @@ function RemoteSensingTaskList(props) {
 
     const btns = [{ text: "知道了", onPress: () => setLoading(false) }];
     fetchChangespotList(fetchParams).then((res) => {
-      if (res?.error) Alert.alert("警告", "服务器网络异常", btns);
-      else setLoading(false);
+      // if (res?.error) Alert.alert("警告", "服务器网络异常", btns);
+      // else setLoading(false);
+      setLoading(false);
     });
     return unsubscribe;
   }, [userid]);
@@ -92,7 +93,32 @@ function RemoteSensingTaskList(props) {
       <View style={{ flex: 1 }}>
         <FlatList
           keyExtractor={({ ROW_ID }) => ROW_ID + ""}
-          data={remoteSensing?.[tabReducer?.[route.name]]}
+          data={[
+            {
+              BATCH: "BATCH",
+              HSXDLMC: "HSXDLMC",
+              ZXSJ: new Date(),
+              ROW_ID: (Math.random() * 10e10).toFixed(0),
+            },
+            {
+              BATCH: "BATCH",
+              HSXDLMC: "HSXDLMC",
+              ZXSJ: new Date(),
+              ROW_ID: (Math.random() * 10e10).toFixed(0),
+            },
+            {
+              BATCH: "BATCH",
+              HSXDLMC: "HSXDLMC",
+              ZXSJ: new Date(),
+              ROW_ID: (Math.random() * 10e10).toFixed(0),
+            },
+            {
+              BATCH: "BATCH",
+              HSXDLMC: "HSXDLMC",
+              ZXSJ: new Date(),
+              ROW_ID: (Math.random() * 10e10).toFixed(0),
+            },
+          ]}
           renderItem={renderItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
