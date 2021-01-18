@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { ThemeProvider } from "react-native-elements";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -6,6 +7,9 @@ import {
   ActionSheetProvider,
   connectActionSheet,
 } from "@expo/react-native-action-sheet";
+import Navigation from "./navigation";
+import useColorScheme from "./hooks/useColorScheme";
+
 import PushNotification from "./components/PushNotification";
 import Main from "./Main";
 import Pets from "./Pets";
@@ -22,14 +26,17 @@ const theme: ITheme = {
 
 const App = (props) => {
   const isLoadingComplete = useCachedResources();
+  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) return null;
   return (
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          <Pets {...props} />
+          {/* <Pets {...props} /> */}
           {/* <Main {...props} /> */}
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
         </SafeAreaProvider>
       </ThemeProvider>
       {/* <PushNotification /> */}

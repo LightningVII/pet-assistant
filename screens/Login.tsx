@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Actions from "../redux/userActions.js";
 
 const image = {
-  iconImage: require("../assets/icon.png"),
+  iconImage: require("../assets/images/icon.png"),
 };
 
 const icon = {

@@ -1,33 +1,34 @@
 {
   "expo": {
-    "name": "guilin-app",
-    "slug": "guilin-app",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "pet-assistant",
+    "slug": "pet-assistant",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
+    "scheme": "pet-assistant",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.pet.tia"
     },
     "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
       "package": "com.pet.tia"
     },
-    "entryPoint": "node_modules/expo/AppEntry.js"
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    }
   }
 }
