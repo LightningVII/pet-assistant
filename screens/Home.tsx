@@ -174,7 +174,7 @@ function Home(props) {
           />
         </TabItem>
         <TabItem
-          handlePress={() => navigation.navigate("TasksMap")}
+          handlePress={() => navigation.navigate("TasksMapScreen")}
           text={"任务地图"}
         >
           <Image
