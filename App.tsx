@@ -10,9 +10,7 @@ import {
 import Navigation from "./navigation";
 import useColorScheme from "./hooks/useColorScheme";
 
-import PushNotification from "./components/PushNotification";
-import Main from "./Main";
-import Pets from "./Pets";
+// import PushNotification from "./components/PushNotification";
 import Store from "./redux/Store";
 import useCachedResources from "./hooks/useCachedResources";
 
@@ -33,8 +31,6 @@ const App = (props) => {
     <ReduxProvider store={Store}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          {/* <Pets {...props} /> */}
-          {/* <Main {...props} /> */}
           <Navigation colorScheme={colorScheme} />
           <StatusBar />
         </SafeAreaProvider>
